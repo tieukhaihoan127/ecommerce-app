@@ -29,7 +29,6 @@ class UserProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-
   }
 
 }

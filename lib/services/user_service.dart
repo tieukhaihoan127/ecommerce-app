@@ -8,11 +8,11 @@ class UserService {
 
   Future<void> createUser(UserModel user) async {
   try {
-    print("Request body: ${user.toJson()}"); // Debug dữ liệu gửi đi
+    print("Request body: ${user.toJson()}"); 
     Response response = await _dio.post(
       ApiConfig.registerUrl, 
       data: user.toJson(),
-      options: Options(headers: {'Content-Type': 'application/json'}) // Đảm bảo gửi JSON
+      options: Options(headers: {'Content-Type': 'application/json'}) 
     );
 
     print("Server Response: ${response.data}");
@@ -21,5 +21,7 @@ class UserService {
     rethrow;
   }
 }
+
+
 
 }

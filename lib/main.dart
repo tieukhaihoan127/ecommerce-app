@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/providers/address_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/auth/signup.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,8 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(create: (context) => UserProvider())
+      ChangeNotifierProvider(create: (context) => UserProvider()),
+      ChangeNotifierProvider(create: (context) => AddressProvider())
     ],
     child: MyApp(),
     )
