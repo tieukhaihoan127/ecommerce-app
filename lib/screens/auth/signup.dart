@@ -20,6 +20,7 @@ class _SignupState extends State<Signup> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmedPasswordController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   String? _selectedProvince = "";
   String? _selectedDistrict = "";
@@ -46,52 +47,56 @@ class _SignupState extends State<Signup> {
     final addressProvider = Provider.of<AddressProvider>(context);
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(
-          horizontal: 16,
-          vertical: 40
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _headerSignUp(context),
-            _labelSignUp(context),
-            const SizedBox(height: 20,),
-            _emailLabel(context),
-            const SizedBox(height: 25,),
-            _nameLabel(context),
-            const SizedBox(height: 25,),
-            _passwordLabel(context),
-            const SizedBox(height: 25,),
-            Text(
-              "Shipping Address",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsetsDirectional.symmetric(
+            horizontal: 16,
+            vertical: 40
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _headerSignUp(context),
+              _labelSignUp(context),
+              const SizedBox(height: 20,),
+              _emailLabel(context),
+              const SizedBox(height: 25,),
+              _nameLabel(context),
+              const SizedBox(height: 25,),
+              _passwordLabel(context),
+              const SizedBox(height: 25,),
+              _confirmPasswordLabel(context),
+              const SizedBox(height: 25,),
+              Text(
+                "Shipping Address",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black
+                ),
               ),
-            ),
-            const SizedBox(height: 10,),
-            Row(
-              children: [
-                _selectProvince(context, addressProvider, "Choose your province"),
-                const SizedBox(width: 20,),
-                _selectDistrict(context, addressProvider, "Choose your district")
-              ],
-            ),
-            const SizedBox(height: 25,),
-            Row(
-              children: [
-                _selectWard(context, addressProvider, "Choose your ward"),
-                const SizedBox(width: 20,),
-                _selectAddress(context)
-              ],
-            ),
-            const SizedBox(height: 25,),
-            _signUpButton(context, userProvider)
-          ],
-        ),
-        )
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  _selectProvince(context, addressProvider, "Choose your province"),
+                  const SizedBox(width: 20,),
+                  _selectDistrict(context, addressProvider, "Choose your district")
+                ],
+              ),
+              const SizedBox(height: 25,),
+              Row(
+                children: [
+                  _selectWard(context, addressProvider, "Choose your ward"),
+                  const SizedBox(width: 20,),
+                  _selectAddress(context)
+                ],
+              ),
+              const SizedBox(height: 25,),
+              _signUpButton(context, userProvider)
+            ],
+          ),
+          ),
+      )
     );
   }
 
@@ -183,6 +188,32 @@ class _SignupState extends State<Signup> {
           controller: _passwordController,
           decoration: InputDecoration(
             hintText: "Enter your password",
+            prefixIcon: Icon(Icons.lock),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5)
+            )
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _confirmPasswordLabel(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Confirm Password",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18
+          ),
+        ),
+        const SizedBox(height: 8,),
+        TextField(
+          controller: _confirmedPasswordController,
+          decoration: InputDecoration(
+            hintText: "Re-enter your password",
             prefixIcon: Icon(Icons.lock),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5)
@@ -341,7 +372,29 @@ class _SignupState extends State<Signup> {
   }
 
   Future<void> _registerUser(BuildContext context, UserProvider userProvider) async {
-    print("Password: ${_passwordController.text}");
+    
+    if(_passwordController.text != _confirmedPasswordController.text) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Mật khẩu nhập lại không chính xác")),
+      );
+
+      _emailController.clear();
+      _nameController.clear();
+      _passwordController.clear();
+      _confirmedPasswordController.clear();
+      _addressController.clear();
+
+      setState(() {
+        _selectedProvince = "";
+        _selectedDistrict = "";
+        _selectedWard = "";
+      });
+
+      return;
+
+    }
+
     final user = UserModel(
       email: _emailController.text,
       fullName: _nameController.text,
