@@ -21,4 +21,13 @@ class ShippingAddress {
     };
   }
 
+  factory ShippingAddress.fromJson(Map<String, dynamic> json) {
+    return ShippingAddress(
+      city: json['city'] ?? '',
+      district: json['district'] ?? '',
+      ward: json['ward'] ?? '',
+      address: json['address'] ?? '',
+    );
+  }
+
 }

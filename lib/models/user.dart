@@ -17,8 +17,8 @@ class UserModel {
     this.id,
     required this.email,
     required this.fullName,
-    required this.password,
-    this.shippingAddress,
+    this.password,
+    required this.shippingAddress,
     this.imageUrl
   });
 
@@ -31,6 +31,17 @@ class UserModel {
       "imageUrl": imageUrl,
       "shippingAddress": shippingAddress?.toJson(),
     };
+  }
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      email: json['email'] ?? '',
+      fullName: json['fullName'] ?? '',
+      imageUrl: json['imageUrl'], 
+      shippingAddress: json['shippingAddress'] != null
+          ? ShippingAddress.fromJson(json['shippingAddress'])
+          : null,
+    );
   }
 
 }

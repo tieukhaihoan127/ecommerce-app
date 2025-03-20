@@ -104,7 +104,7 @@ class _SignupState extends State<Signup> {
     return Text(
       "Create your account",
       style: TextStyle(
-        fontSize: 18,
+        fontSize: 30,
         color: Colors.black
       ),
     );
