@@ -73,4 +73,10 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> resetUser() async {
+      _user = null;
+      notifyListeners();
+  }
+
 }

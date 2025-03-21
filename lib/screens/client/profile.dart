@@ -1,11 +1,55 @@
 import 'package:ecommerce_app/providers/user_provider.dart';
+import 'package:ecommerce_app/screens/client/bottom_nav.dart';
+import 'package:ecommerce_app/screens/client/home.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatelessWidget{
 
   const Profile({ super.key });
+
+  Future<void> logout(BuildContext context, UserProvider user) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove("token");
+    user.resetUser();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => BottomNavBar()),
+      (route) => false, // Xóa tất cả route trước đó
+    );
+
+  }
+
+  void showLogoutDialog(BuildContext context,UserProvider user) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Xác nhận đăng xuất"),
+          content: const Text("Bạn có chắc chắn muốn đăng xuất không?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); 
+              },
+              child: const Text("Hủy"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); 
+                logout(context,user); 
+              },
+              child: const Text("Có", style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +84,14 @@ class Profile extends StatelessWidget{
                     _itemProfile(Icons.location_on, context,"Manage Delivery Address", () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
                     }),
-                    // _itemProfile(Icons.history, context,"Order History", () {
-                    //   Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
-                    // }),
+                    _itemProfile(Icons.history, context,"Order History", () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                    }),
                     _itemProfile(Icons.lock, context,"Change Password", () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
                     }),
                     _itemProfile(Icons.logout, context,"Log Out", () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                      showLogoutDialog(context,userProvider);
                     })
                   ],
                 ),
