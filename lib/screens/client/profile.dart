@@ -40,9 +40,9 @@ class Profile extends StatelessWidget{
                     _itemProfile(Icons.location_on, context,"Manage Delivery Address", () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
                     }),
-                    _itemProfile(Icons.history, context,"Order History", () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
-                    }),
+                    // _itemProfile(Icons.history, context,"Order History", () {
+                    //   Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                    // }),
                     _itemProfile(Icons.lock, context,"Change Password", () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
                     }),

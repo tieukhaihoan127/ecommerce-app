@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/models/user_login.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
+import 'package:ecommerce_app/screens/client/bottom_nav.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/screens/client/signup.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +156,7 @@ class _SigninState extends State<Signin>{
       );
       Navigator.pushAndRemoveUntil(
         context, 
-        MaterialPageRoute(builder: (context) => Profile()),
+        MaterialPageRoute(builder: (context) => BottomNavBar()),
         (Route<dynamic> route) => false
     ) ;
     } else {
