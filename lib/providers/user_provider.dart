@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/models/change_password.dart';
 import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
@@ -68,7 +69,7 @@ class UserProvider with ChangeNotifier {
         _errorMessage = '';
         if(updated) notifyListeners();
       } else {
-        _errorMessage = "Đăng nhập thất bại!";
+        _errorMessage = "Cập nhật thông tin thất bại!";
         notifyListeners();
       }
 
@@ -80,6 +81,36 @@ class UserProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<String> changeUserPassword(ChangePasswordInfo user, String id) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _userRepository.changeUserPassword(user, id);
+      if(response != "") {
+
+        bool updated = false;
+
+        _errorMessage = '';
+        notifyListeners();
+        return response;
+      } else {
+        _errorMessage = "Đổi mật khẩu thất bại!";
+        notifyListeners();
+      }
+
+    }
+    catch(e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    return "";
   }
 
   Future<bool> loginUser(LoginUser user) async {

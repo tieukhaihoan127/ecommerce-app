@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/api_config.dart';
+import 'package:ecommerce_app/models/change_password.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/models/user_login.dart';
@@ -28,7 +29,7 @@ class UserService {
     try {
 
       final url = "${ApiConfig.updateUserUrl}${id}";
-      Response response = await _dio.post(
+      Response response = await _dio.patch(
         url, 
         data: user.toJson(),
         options: Options(headers: {'Content-Type': 'application/json'}) 
@@ -45,6 +46,36 @@ class UserService {
     } on DioException catch (e) {
       print("Dio Error: ${e.response?.data}"); 
       rethrow;
+    }
+  }
+
+  Future<String> changeUserPassword(ChangePasswordInfo user, String id) async {
+    try {
+
+      final url = "${ApiConfig.changePasswordUrl}${id}";
+      Response response = await _dio.patch(
+        url, 
+        data: user.toJson(),
+        options: Options(headers: {'Content-Type': 'application/json'}) 
+      );
+
+      print("Server Response: ${response.data}");
+
+      if (response.data != null && response.data["message"] != null) {
+        return response.data["message"];
+      } else {
+        return await Future.error("Lỗi hệ thống, không nhận được data!");
+      }
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}");
+
+      if (e.response != null && e.response?.data != null) {
+        final errorMessage = e.response?.data['error'] ?? 'Đổi mật khẩu thất bại!';
+        return Future.error(errorMessage);
+      }
+
+      return Future.error("Lỗi kết nối! Vui lòng thử lại.");
     }
   }
 

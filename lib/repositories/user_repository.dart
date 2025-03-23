@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/models/change_password.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/models/user_login.dart';
@@ -12,5 +13,7 @@ class UserRepository {
   Future<dynamic> updateUser(UpdateUserInfo user, String id) => _userService.updateUser(user, id);
 
   Future<dynamic> getUserLogin(LoginUser user) => _userService.loginUser(user);
+
+  Future<String> changeUserPassword(ChangePasswordInfo user, String id) => _userService.changeUserPassword(user, id);
 
 }

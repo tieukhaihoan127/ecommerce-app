@@ -8,5 +8,6 @@ class ApiConfig {
   static const String wardUrl = '${addressUrl}wards/getByDistrict?districtCode=';
   static const String loginUrl = '${baseUrl}users/login';
   static const String updateUserUrl = '${baseUrl}users/info/';
+  static const String changePasswordUrl = '${baseUrl}users/change-password/';
   
 }

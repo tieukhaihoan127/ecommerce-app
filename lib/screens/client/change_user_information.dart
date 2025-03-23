@@ -6,6 +6,7 @@ import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
+import 'package:ecommerce_app/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -105,8 +106,6 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           SnackBar(content: Text("Profile updated successfully!")),
         );
       }
-
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar()));
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -122,12 +121,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("My Account", style: TextStyle(fontWeight: FontWeight.bold)),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBarHelper(header: "My Account"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

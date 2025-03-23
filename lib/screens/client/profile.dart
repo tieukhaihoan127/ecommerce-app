@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
+import 'package:ecommerce_app/screens/client/change_password.dart';
 import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
@@ -75,7 +76,6 @@ class Profile extends StatelessWidget{
               ),
               const SizedBox(height: 20,),
               SizedBox(
-                height: 300,
                 child: ListView(
                   shrinkWrap: true,
                   children: [
@@ -89,7 +89,7 @@ class Profile extends StatelessWidget{
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
                     }),
                     _itemProfile(Icons.lock, context,"Change Password", () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen()));
                     }),
                     _itemProfile(Icons.logout, context,"Log Out", () {
                       showLogoutDialog(context,userProvider);
