@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/providers/address_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
+import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:ecommerce_app/screens/client/signup.dart';

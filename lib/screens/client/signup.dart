@@ -75,8 +75,9 @@ class _SignupState extends State<Signup> {
                   color: Colors.black
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(height: 20,),
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _selectProvince(context, addressProvider, "Choose your province"),
                   const SizedBox(width: 20,),
@@ -226,7 +227,7 @@ class _SignupState extends State<Signup> {
 
   Widget _selectProvince(BuildContext context, AddressProvider addressProvider, String text) {
 
-    return Expanded(
+    return Flexible(
       child: DropdownButtonFormField<String>(
         value:  addressProvider.isLoaded ? (_selectedProvince != "" ? _selectedProvince : null) : null,
         hint: Text(text),
@@ -267,7 +268,7 @@ class _SignupState extends State<Signup> {
 
   Widget _selectDistrict(BuildContext context, AddressProvider addressProvider, String text) {
 
-    return Expanded(
+    return Flexible(
       child: DropdownButtonFormField<String>(
         value:  _selectedProvince != "" ? (_selectedDistrict != "" ? _selectedDistrict : null) : null,
         hint: Text(text),

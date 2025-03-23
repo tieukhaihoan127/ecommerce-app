@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
+import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class Profile extends StatelessWidget{
                   shrinkWrap: true,
                   children: [
                     _itemProfile(Icons.person, context,"My Account", () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyAccountScreen()));
                     }),
                     _itemProfile(Icons.location_on, context,"Manage Delivery Address", () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));

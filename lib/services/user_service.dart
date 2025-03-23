@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/api_config.dart';
+import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/models/user_login.dart';
 
@@ -17,6 +18,30 @@ class UserService {
       );
 
       print("Server Response: ${response.data}");
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateUser(UpdateUserInfo user, String id) async {
+    try {
+
+      final url = "${ApiConfig.updateUserUrl}${id}";
+      Response response = await _dio.post(
+        url, 
+        data: user.toJson(),
+        options: Options(headers: {'Content-Type': 'application/json'}) 
+      );
+
+      print("Server Response: ${response.data}");
+
+      if (response.data != null) {
+        return response.data;
+      } else {
+        return await Future.error("Lỗi hệ thống, không nhận được data!");
+      }
+
     } on DioException catch (e) {
       print("Dio Error: ${e.response?.data}"); 
       rethrow;

@@ -5,20 +5,20 @@ import 'package:json_annotation/json_annotation.dart';
 class UserModel {
   
   @JsonKey(name: '_id')
-  final String? id;
-  final String? email;
-  final String? fullName;
-  final String? password;
-  final ShippingAddress? shippingAddress;
+  String? id;
+  String? email;
+  String? fullName;
+  String? password;
+  ShippingAddress? shippingAddress;
   @JsonKey(includeIfNull: false)
-  final String? imageUrl;
+  String? imageUrl;
 
   UserModel({
     this.id,
     required this.email,
     required this.fullName,
     this.password,
-    required this.shippingAddress,
+    this.shippingAddress,
     this.imageUrl
   });
 
