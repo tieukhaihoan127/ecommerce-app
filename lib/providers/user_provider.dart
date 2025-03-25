@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/models/change_password.dart';
+import 'package:ecommerce_app/models/otp_verify.dart';
+import 'package:ecommerce_app/models/remember_user_token.dart';
 import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
@@ -23,6 +25,10 @@ class UserProvider with ChangeNotifier {
   UserModel? _user;
 
   UserModel? get user => _user;
+
+  String _token = "";
+
+  String get token => _token;
 
   Future<void> addUser(UserModel user) async {
     _isLoading = true;
@@ -147,6 +153,101 @@ class UserProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<String> getAccountOTP(dynamic email) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _userRepository.getOTPAccount(email);
+      if(response != "") {
+
+        if(response["message"] != "") {
+          return response["message"];
+        }
+
+        _errorMessage = '';
+        notifyListeners();
+      } else {
+        _errorMessage = "Gửi mã OTP thất bại!";
+        notifyListeners();
+      }
+
+    }
+    catch(e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    return "Gửi mã OTP không thành công!";
+  }
+
+  Future<String> submitAccountOTPPost(OTPVerify userInfo) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _userRepository.submitOTP(userInfo);
+      if(response != "") {
+
+        if(response["token"] != "") {
+          _token = response["token"];
+        }
+
+        if(response["message"] != "") {
+          return response["message"];
+        }
+
+        _errorMessage = '';
+        notifyListeners();
+      } else {
+        _errorMessage = "Gửi mã OTP thất bại!";
+        notifyListeners();
+      }
+
+    }
+    catch(e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    return "Xác nhận mã OTP không thành công!";
+  }
+
+  Future<String> updatePasswordPost(RememberUserToken userInfo) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _userRepository.updatePassword(userInfo);
+      if(response != "") {
+
+        _errorMessage = '';
+        notifyListeners();
+        return response;
+
+      } else {
+        _errorMessage = "Cập nhật mật khẩu thất bại!";
+        notifyListeners();
+      }
+
+    }
+    catch(e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    return "Cập nhật mật khẩu không thành công!";
   }
 
   Future<void> resetUser() async {

@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/models/user_login.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
+import 'package:ecommerce_app/screens/client/password_recovery.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/screens/client/signup.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class _SigninState extends State<Signin>{
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _headerSignIn(context),
               _labelSignIn(context),
@@ -42,6 +44,8 @@ class _SigninState extends State<Signin>{
               _emailLabel(context),
               const SizedBox(height: 20,),
               _passwordLabel(context),
+              const SizedBox(height: 10,),
+              _forgetPassword(context),
               const SizedBox(height: 25,),
               _signUpButton(context, userProvider),
               const SizedBox(height: 25,),
@@ -167,6 +171,25 @@ class _SigninState extends State<Signin>{
       );
     }
 
+  }
+
+  Widget _forgetPassword(BuildContext context) {
+    return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PasswordRecoveryScreen()),
+            );
+          },
+          child: Text(
+            "Forget Passwod?",
+          style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.bold
+        ),
+      ),
+    );
   }
 
   Widget _redirectSignUp(BuildContext context) {

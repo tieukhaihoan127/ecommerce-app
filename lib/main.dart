@@ -5,6 +5,7 @@ import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:ecommerce_app/screens/client/signup.dart';
+import 'package:ecommerce_app/screens/client/submit_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

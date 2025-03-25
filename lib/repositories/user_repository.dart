@@ -1,4 +1,6 @@
 import 'package:ecommerce_app/models/change_password.dart';
+import 'package:ecommerce_app/models/otp_verify.dart';
+import 'package:ecommerce_app/models/remember_user_token.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/models/user_login.dart';
@@ -15,5 +17,11 @@ class UserRepository {
   Future<dynamic> getUserLogin(LoginUser user) => _userService.loginUser(user);
 
   Future<String> changeUserPassword(ChangePasswordInfo user, String id) => _userService.changeUserPassword(user, id);
+
+  Future<dynamic> getOTPAccount(dynamic email) => _userService.sendOTPToUser(email);
+
+  Future<dynamic> submitOTP(OTPVerify info) => _userService.submitUserOTP(info);
+
+  Future<String> updatePassword(RememberUserToken info) => _userService.userPasswordRecovery(info);
 
 }

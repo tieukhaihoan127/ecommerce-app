@@ -16,5 +16,4 @@ class AppBarHelper extends StatelessWidget {
       ),
     );
   }
-  
 }

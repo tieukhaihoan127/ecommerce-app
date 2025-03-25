@@ -1,24 +1,24 @@
 import 'package:ecommerce_app/models/change_password.dart';
+import 'package:ecommerce_app/models/remember_user_token.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
+import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:ecommerce_app/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ChangePasswordScreen extends StatefulWidget {
+class UpdatePasswordScreen extends StatefulWidget {
 
-  const ChangePasswordScreen({super.key});
+  const UpdatePasswordScreen({super.key});
 
   @override
-  _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
+  _UpdatePasswordScreenState createState() => _UpdatePasswordScreenState();
 
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
+class _UpdatePasswordScreenState extends State<UpdatePasswordScreen>{
 
-  final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmedPasswordController = TextEditingController();
-  bool _isUploading = false;
   String _id = "";
 
   @override
@@ -32,30 +32,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
 
   }
 
-  Future<void> _submitChangePassword() async {
+  Future<void> _updatePassword(UserProvider user) async {
 
-    final user = Provider.of<UserProvider>(context, listen: false);
-
-    setState(() {
-      _isUploading = true;
-    });
-
-    final changePasswordData = ChangePasswordInfo(
-        currentPassword: _currentPasswordController.text,
+    final updatePasswordData = RememberUserToken(
+        token: user.token,
         newPassword: _newPasswordController.text,
         confirmPassword: _confirmedPasswordController.text
     );
 
-    String message = await user.changeUserPassword(changePasswordData, _id);
+    String message = await user.updatePasswordPost(updatePasswordData);
 
     if(user.errorMessage.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
-
-      setState(() {
-        _isUploading = false;
-      });
     }
     else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -63,12 +53,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
       );
     }
 
-    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Signin()),
+    );
 
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final user = Provider.of<UserProvider>(context, listen: false);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
@@ -77,22 +73,49 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTextField(Icons.lock, "Current Password", _currentPasswordController),
+            _headerUpdatePassword(context),
+            _labelUpdatePassword(context),
+            SizedBox(height: 20),
             _buildTextField(Icons.lock, "New Password", _newPasswordController),
             _buildTextField(Icons.lock, "Confirm Password", _confirmedPasswordController),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _isUploading ? null : _submitChangePassword,
+              onPressed: user.isLoading ? null : () {
+                _updatePassword(user);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
               ),
-              child: _isUploading ? CircularProgressIndicator(color: Colors.white) : Text("Change Password", style: TextStyle(color: Colors.white, fontSize: 16)),
+              child: user.isLoading ? CircularProgressIndicator(color: Colors.white) : Text("Reset Password", style: TextStyle(color: Colors.white, fontSize: 16)),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _headerUpdatePassword(BuildContext context) {
+    return Text(
+      "Reset your Password",
+      style: TextStyle(
+        fontSize: 30,
+        color: Colors.black
+      ),
+    );
+  }
+
+  Widget _labelUpdatePassword(BuildContext context) {
+    return Text(
+      "You can create a new password for your account",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 14,
+        color: Colors.grey
       ),
     );
   }

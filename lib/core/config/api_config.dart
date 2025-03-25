@@ -1,6 +1,6 @@
 class ApiConfig {
 
-  static const String baseUrl = 'http://192.168.1.8:3030/';
+  static const String baseUrl = 'http://192.168.1.9:3030/';
   static const String registerUrl = '${baseUrl}users/register';
   static const String addressUrl = 'https://vn-public-apis.fpo.vn/';
   static const String cityUrl = '${addressUrl}provinces/getAll?limit=-1';
@@ -9,5 +9,8 @@ class ApiConfig {
   static const String loginUrl = '${baseUrl}users/login';
   static const String updateUserUrl = '${baseUrl}users/info/';
   static const String changePasswordUrl = '${baseUrl}users/change-password/';
+  static const String getOTPUrl = '${baseUrl}users/password/forgot';
+  static const String submitOTPUrl = '${baseUrl}users/password/otp';
+  static const String updatePasswordUrl = '${baseUrl}users/password/reset';
   
 }
