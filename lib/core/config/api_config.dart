@@ -1,6 +1,6 @@
 class ApiConfig {
 
-  static const String baseUrl = 'http://192.168.1.9:3030/';
+  static const String baseUrl = 'http://192.168.1.13:3030/';
   static const String registerUrl = '${baseUrl}users/register';
   static const String addressUrl = 'https://vn-public-apis.fpo.vn/';
   static const String cityUrl = '${addressUrl}provinces/getAll?limit=-1';
