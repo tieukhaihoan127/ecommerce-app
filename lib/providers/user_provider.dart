@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:ecommerce_app/models/change_password.dart';
 import 'package:ecommerce_app/models/otp_verify.dart';
 import 'package:ecommerce_app/models/remember_user_token.dart';
@@ -97,7 +96,7 @@ class UserProvider with ChangeNotifier {
       final response = await _userRepository.changeUserPassword(user, id);
       if(response != "") {
 
-        bool updated = false;
+        // bool updated = false;
 
         _errorMessage = '';
         notifyListeners();

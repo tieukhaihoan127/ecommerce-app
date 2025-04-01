@@ -18,7 +18,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedScreenIndex = 0;
 
   final List<Widget>  _screens = [
-    Home(),
+    HomeScreen(),
     Cart(),
     Order(),
     Profile()

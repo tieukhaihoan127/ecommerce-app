@@ -29,7 +29,6 @@ class UserService {
 
   Future<dynamic> updateUser(UpdateUserInfo user, String id) async {
     try {
-
       final url = "${ApiConfig.updateUserUrl}${id}";
       Response response = await _dio.patch(
         url, 

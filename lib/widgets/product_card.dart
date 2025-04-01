@@ -1,6 +1,12 @@
+import 'package:ecommerce_app/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
+
+  final ProductModel product;
+
+  const ProductCard({super.key, required this.product});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,36 +24,39 @@ class ProductCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: NetworkImage(
-                        'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1695385914/cld-sample-5.jpg'),
+                    image: product.thumbnail != "" ? NetworkImage(product.thumbnail!) : NetworkImage('https://res.cloudinary.com/dwdhkwu0r/image/upload/v1742743354/public/lafrmfp3o9jdgbl4csnb.jpg'),
                     fit: BoxFit.cover, 
                   ),
                 ),
               ),
             ),
             SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Wooden Chair',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.orange, size: 16),
-                    SizedBox(width: 4),
-                    Text('5.0', style: TextStyle(fontSize: 14)),
-                  ],
-                )
-              ],
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       product.title != "" ? product.title! : "Unknown",
+            //       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+            //     ),
+            //     Row(
+            //       children: [
+            //         Icon(Icons.star, color: Colors.orange, size: 16),
+            //         SizedBox(width: 1),
+            //         Text('5.0', style: TextStyle(fontSize: 14)),
+            //       ],
+            //     )
+            //   ],
+            // ),
+            Text(
+              product.title != "" ? product.title! : "Unknown",
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '\$120.00',
+                  product.price! > 0.0 ? product.price!.toString() : "Unknown Price",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 GestureDetector(

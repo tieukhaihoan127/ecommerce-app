@@ -25,7 +25,7 @@ class AppBarHome extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(width: 5),
 
           CircleAvatar(
-            backgroundImage: NetworkImage('https://res.cloudinary.com/dwdhkwu0r/image/upload/v1742743354/public/lafrmfp3o9jdgbl4csnb.jpg'), // Thay link ảnh avatar
+            backgroundImage: NetworkImage('https://res.cloudinary.com/dwdhkwu0r/image/upload/v1742743354/public/lafrmfp3o9jdgbl4csnb.jpg'),
             radius: 20,
           ),
 
