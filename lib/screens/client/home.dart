@@ -5,8 +5,8 @@ import 'package:ecommerce_app/widgets/app_bar_home.dart';
 import 'package:ecommerce_app/widgets/carousel.dart';
 import 'package:ecommerce_app/widgets/category_selector.dart';
 import 'package:ecommerce_app/widgets/home_drawer.dart';
-import 'package:ecommerce_app/widgets/product_card.dart';
 import 'package:ecommerce_app/widgets/product_grid.dart';
+import 'package:ecommerce_app/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,17 +36,20 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.delayed(Duration.zero, () async {
       final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
       final productProvider = Provider.of<ProductProvider>(context, listen: false);
+
       if (!_isLoaded) {
         String? status = categoryProvider.status;
+        await categoryProvider.loadCategory();
         if (status != "All") {
           await productProvider.getAllProducts(status);
         } else {
-          await categoryProvider.loadCategory();
+          List<Future> futures = [];
           for (var category in categoryProvider.categories) {
             if (!productProvider.productsByCategory.containsKey(category.id)) {
-              await productProvider.getAllProducts(category.id);
+              futures.add(productProvider.getAllProducts(category.id));
             }
           }
+          await Future.wait(futures);
         }
         setState(() {
           _isLoaded = true; 
@@ -69,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchBar(),
+              SearchBarWidget(),
               SizedBox(height: 20),
               Carousel(imagePaths: imagePaths),
               SizedBox(height: 20),
@@ -108,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchBar(),
+              SearchBarWidget(),
               SizedBox(height: 20),
               Carousel(imagePaths: imagePaths),
               SizedBox(height: 20),
@@ -136,18 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class SearchBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: 'Search here...',
-        prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
-}
 
 // class CategorySelector extends StatelessWidget {
 //   final List<String> categories = ['All', 'Promotional Products', 'New Products', 'Best Sellers', 'Laptops','Monitors','Keyboards','Mouses','Hard Drives','Webcams'];

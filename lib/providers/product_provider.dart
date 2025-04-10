@@ -33,6 +33,34 @@ class ProductProvider with ChangeNotifier{
       if(productss.isNotEmpty) {
 
         _products = (productss as List).map<ProductModel>((item) => ProductModel.fromJson(item)).toList();
+
+        productsByCategory[status] = products;
+        
+      }
+
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+  }
+
+  Future<void> getAllProductPages(String status) async{
+  
+    _isLoading = true;
+    notifyListeners();
+
+    try { 
+      final productss = await _productRepository.getAllProductPages(status);
+      if(productss.isNotEmpty) {
+
+        _products = (productss as List).map<ProductModel>((item) => ProductModel.fromJson(item)).toList();
+
         productsByCategory[status] = products;
         
       }

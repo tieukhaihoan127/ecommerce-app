@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/screens/client/cart.dart';
+import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
 import 'package:ecommerce_app/screens/client/order.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
@@ -19,6 +20,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   final List<Widget>  _screens = [
     HomeScreen(),
+    CategoryScreen(),
     Cart(),
     Order(),
     Profile()
@@ -43,6 +45,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.category), label: "Category"),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Cart"),
           BottomNavigationBarItem(icon: Icon(Icons.receipt), label: "Order"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),

@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/widgets/product_card.dart';
+import 'package:ecommerce_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 
 class ProductGrid extends StatefulWidget{
@@ -118,7 +119,8 @@ class ProductHolderItem extends StatelessWidget {
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
-        return ProductCard(product: products[index]);
+        // return ProductCard(product: products[index]);
+        return ProductItem(product: products[index]);
       },
     );
   }

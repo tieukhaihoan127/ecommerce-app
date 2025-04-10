@@ -25,4 +25,23 @@ class ProductService {
       rethrow;
     } 
   }
+
+  Future<List<Map<String,dynamic>>> getProductPages(String status) async{
+    try {
+
+      if(status == "") {
+        status = "All";
+      }
+
+      Response response = await _dio.get("${ApiConfig.getProductPagesUrl}$status");
+      if (response.statusCode == 200 && response.data["products"].length > 0) {
+        return List<Map<String, dynamic>>.from(response.data["products"]);
+      }
+      throw Exception('Failed to load products');
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
+    } 
+  }
 }

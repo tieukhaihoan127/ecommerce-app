@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/models/category.dart';
+import 'package:ecommerce_app/models/category_model_page.dart';
 import 'package:ecommerce_app/providers/product_provider.dart';
 import 'package:ecommerce_app/repositories/category_repositoroy.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,10 @@ class CategoryProvider with ChangeNotifier{
   List<CategoryModel> _categories = [];
 
   List<CategoryModel> get categories => _categories;
+
+  List<CategoryPageModel> _categoryPages = [];
+
+  List<CategoryPageModel> get categoryPages => _categoryPages;
 
   bool _isLoading = false;
 
@@ -57,10 +62,32 @@ class CategoryProvider with ChangeNotifier{
     }
   }
 
+  Future<void> fetchAllCategory() async {
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final categories = await _categoryRepositoroy.getAllCategories();
+
+      if(categories.isNotEmpty) {
+        _categoryPages = (categories as List).map<CategoryPageModel>((item) => CategoryPageModel.fromJson(item)).toList();
+      }
+
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void getStatus(BuildContext context, CategoryModel category) {
     _status = category.id;
     _name = category.name;
-    // context.read<ProductProvider>().getAllProducts(_status);
     notifyListeners();
   }
 

@@ -6,4 +6,6 @@ class ProductRepository {
 
   Future<List<Map<String,dynamic>>> getAllProducts(String status) => _productService.getProducts(status);
 
+  Future<List<Map<String,dynamic>>> getAllProductPages(String status) => _productService.getProductPages(status);
+
 }
