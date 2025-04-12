@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/models/product.dart';
+import 'package:ecommerce_app/screens/client/product_detail_page.dart';
 import 'package:ecommerce_app/widgets/product_card.dart';
 import 'package:ecommerce_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +91,15 @@ class _ProductGridLazyState extends State<ProductGridLazy> {
         );
       }
     
-        return ProductItem(product: _displayedProducts[index]);
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(builder: (_) => ProductDetailPage(productModel: _displayedProducts[index],))
+            );
+          },
+          child: ProductItem(product: _displayedProducts[index])
+        );
       }
     );
   }

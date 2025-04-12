@@ -6,6 +6,7 @@ import 'package:ecommerce_app/screens/client/bottom_nav.dart';
 import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
+import 'package:ecommerce_app/screens/client/product_detail_page.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:ecommerce_app/screens/client/signup.dart';

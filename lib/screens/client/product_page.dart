@@ -11,6 +11,7 @@ import 'package:ecommerce_app/widgets/product_grid.dart';
 import 'package:ecommerce_app/widgets/product_grid_lazy.dart';
 import 'package:ecommerce_app/widgets/product_item.dart';
 import 'package:ecommerce_app/widgets/search_bar.dart';
+import 'package:ecommerce_app/widgets/search_bar_with_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +50,7 @@ class _ProductScreenState extends State<ProductPageScreen> {
         child:Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SearchBarWidget(),
+            SearchBarWithFilter(),
             SizedBox(height: 20),
             if ((productProvider.productsByCategory[widget.categoryId] ?? []).isEmpty && productProvider.isLoading) 
                 Center(child: CircularProgressIndicator())
