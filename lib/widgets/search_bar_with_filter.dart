@@ -5,8 +5,9 @@ class SearchBarWithFilter extends StatelessWidget {
 
   final String categoryId;
   final String categoryName;
+  final Function(String)? onSearchChanged;
 
-  const SearchBarWithFilter({super.key, required this.categoryId, required this.categoryName});
+  const SearchBarWithFilter({super.key, required this.categoryId, required this.categoryName, this.onSearchChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class SearchBarWithFilter extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
+                    onChanged: onSearchChanged,
                     decoration: const InputDecoration(
                       hintText: 'Search here...',
                       border: InputBorder.none,

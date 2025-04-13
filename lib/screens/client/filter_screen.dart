@@ -277,8 +277,7 @@ class _FilterScreenState extends State<FilterScreen> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  print(priceRange.start);
-                  print(priceRange.end);
+                  print(selectedSortOption);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPageScreen(categoryId: widget.categoryId, categoryName: widget.categoryName, sortById: selectedSortOption, brandSelection: selectedBrands, priceRangeStart: priceRange.start, priceRangeEnd: priceRange.end, ratingRangeStart: ratingRange.start, ratingRangeEnd: ratingRange.end,)));
                 },
                 style: ElevatedButton.styleFrom(

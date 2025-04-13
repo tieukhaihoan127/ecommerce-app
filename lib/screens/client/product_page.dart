@@ -26,13 +26,24 @@ class ProductPageScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductPageScreen> {
 
-@override
+  String _searchQuery = "";
+
+  void _handleSearchChanged(String value) async {
+    setState(() {
+      _searchQuery = value;
+    });
+    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    productProvider.clearProductsByCategory(widget.categoryId);
+    await productProvider.getAllProductPages(widget.categoryId, widget.sortById ?? '1', widget.brandSelection, widget.priceRangeStart, widget.priceRangeEnd, widget.ratingRangeStart, widget.ratingRangeEnd, _searchQuery);
+  }
+
+  @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
       final productProvider = Provider.of<ProductProvider>(context, listen: false);
       productProvider.clearProductsByCategory(widget.categoryId);
-      await productProvider.getAllProductPages(widget.categoryId, widget.sortById ?? '1', widget.brandSelection, widget.priceRangeStart, widget.priceRangeEnd, widget.ratingRangeStart, widget.ratingRangeEnd);
+      await productProvider.getAllProductPages(widget.categoryId, widget.sortById ?? '1', widget.brandSelection, widget.priceRangeStart, widget.priceRangeEnd, widget.ratingRangeStart, widget.ratingRangeEnd, "");
     });
   }
 
@@ -48,7 +59,7 @@ class _ProductScreenState extends State<ProductPageScreen> {
         child:Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SearchBarWithFilter(categoryId: widget.categoryId, categoryName: widget.categoryName,),
+            SearchBarWithFilter(categoryId: widget.categoryId, categoryName: widget.categoryName, onSearchChanged: _handleSearchChanged,),
             SizedBox(height: 20),
             if ((productProvider.productsByCategory[widget.categoryId] ?? []).isEmpty && productProvider.isLoading) 
                 Center(child: CircularProgressIndicator())

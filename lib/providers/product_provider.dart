@@ -50,13 +50,13 @@ class ProductProvider with ChangeNotifier{
 
   }
 
-  Future<void> getAllProductPages(String status, String? sortById, List<String>? selectedBrand, double? priceRangeStart, double? priceRangeEnd, double? ratingRangeStart, double? ratingRangeEnd) async{
+  Future<void> getAllProductPages(String status, String? sortById, List<String>? selectedBrand, double? priceRangeStart, double? priceRangeEnd, double? ratingRangeStart, double? ratingRangeEnd, String? search) async{
   
     _isLoading = true;
     notifyListeners();
 
     try { 
-      final productss = await _productRepository.getAllProductPages(status, sortById, selectedBrand, priceRangeStart, priceRangeEnd, ratingRangeStart, ratingRangeEnd);
+      final productss = await _productRepository.getAllProductPages(status, sortById, selectedBrand, priceRangeStart, priceRangeEnd, ratingRangeStart, ratingRangeEnd, search);
       if(productss.isNotEmpty) {
 
         _products = (productss as List).map<ProductModel>((item) => ProductModel.fromJson(item)).toList();

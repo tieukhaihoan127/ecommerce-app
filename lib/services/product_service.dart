@@ -25,7 +25,7 @@ class ProductService {
     } 
   }
 
-  Future<List<Map<String,dynamic>>> getProductPages(String status, String? sortById, List<String>? selectedBrands, double? priceRangeStart, double? priceRangeEnd, double? ratingRangeStart, double? ratingRangeEnd) async{
+  Future<List<Map<String,dynamic>>> getProductPages(String status, String? sortById, List<String>? selectedBrands, double? priceRangeStart, double? priceRangeEnd, double? ratingRangeStart, double? ratingRangeEnd, String? search) async{
     try {
 
       if(status == "") {
@@ -54,6 +54,10 @@ class ProductService {
     if (ratingRangeStart != null && ratingRangeEnd != null) {
       queryParams.add("ratingStart=$ratingRangeStart");
       queryParams.add("ratingEnd=$ratingRangeEnd");
+    }
+
+    if(search != null) {
+      queryParams.add("search=$search");
     }
 
     if (queryParams.isNotEmpty) {
