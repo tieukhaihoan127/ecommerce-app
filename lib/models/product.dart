@@ -1,4 +1,3 @@
-import 'package:cloudinary_url_gen/config/url_config.dart';
 import 'package:ecommerce_app/models/product_variant.dart';
 import 'package:json_annotation/json_annotation.dart';
 

@@ -2,7 +2,11 @@ import 'package:ecommerce_app/screens/client/filter_screen.dart';
 import 'package:flutter/material.dart';
 
 class SearchBarWithFilter extends StatelessWidget {
-  const SearchBarWithFilter({super.key});
+
+  final String categoryId;
+  final String categoryName;
+
+  const SearchBarWithFilter({super.key, required this.categoryId, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,7 @@ class SearchBarWithFilter extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context, 
-                MaterialPageRoute(builder: (context) => const FilterScreen()),
+                MaterialPageRoute(builder: (context) => FilterScreen(categoryId: categoryId, categoryName: categoryName,)),
               );
             }, 
             icon: const Icon(Icons.tune)

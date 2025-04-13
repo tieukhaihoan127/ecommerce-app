@@ -1,8 +1,14 @@
+import 'package:ecommerce_app/screens/client/product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({super.key});
+
+  final String categoryId;
+  
+  final String categoryName;
+
+  const FilterScreen({super.key, required this.categoryId, required this.categoryName});
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -10,28 +16,30 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   int selectedTab = 0;
-  String selectedSortOption = 'Relevance';
-  List<String> selectedColors = [];
+  String selectedSortOption = '1';
+  List<String> selectedBrands = [];
   bool isAllSelected = false;
 
-  final List<String> tabs = ['Sort by', 'Color', 'Price', 'Rating'];
+  final List<String> tabs = ['Sort by', 'Brand', 'Price', 'Rating'];
 
   final List<String> sortOptions = [
     'Name(A -> Z)',
     'Name(Z -> A)',
     'Price Ascending',
     'Price Descending',
-    'Best Discount'
-        'Newest',
+    'Best Discount',
+    'Newest',
   ];
 
-  final List<Map<String, dynamic>> colors = [
-    {"name": "Black", "color": Colors.black, "count": 5},
-    {"name": "Gray", "color": Colors.grey, "count": 12},
-    {"name": "Blue", "color": Colors.blue, "count": 22},
-    {"name": "Yellow", "color": Colors.yellow, "count": 6},
-    {"name": "Green", "color": Colors.green, "count": 10},
-    {"name": "Red", "color": Colors.red, "count": 8},
+  final List<String> brands = [
+    'ASUS',
+    'HP',
+    'MSI',
+    'Apple',
+    'Acer',
+    'Lenovo',
+    'Gigabyte',
+    'LG Gram'
   ];
 
   RangeValues priceRange = const RangeValues(0, 100000000);
@@ -87,11 +95,10 @@ class _FilterScreenState extends State<FilterScreen> {
                   if (selectedTab == 0) {
                     return ListView(
                       children:
-                          sortOptions
-                              .map(
+                          sortOptions.asMap().entries.map(
                                 (option) => RadioListTile<String>(
-                                  title: Text(option),
-                                  value: option,
+                                  title: Text(option.value),
+                                  value: (option.key + 1).toString(),
                                   groupValue: selectedSortOption,
                                   onChanged: (value) {
                                     setState(() => selectedSortOption = value!);
@@ -111,24 +118,22 @@ class _FilterScreenState extends State<FilterScreen> {
                           ),
                           child: CheckboxListTile(
                             value: isAllSelected,
-                            title: const Text("Select All"),
+                            title: const Text("All"),
                             controlAffinity: ListTileControlAffinity.leading,
                             onChanged: (value) {
                               setState(() {
                                 isAllSelected = value!;
-                                selectedColors =
+                                selectedBrands =
                                     isAllSelected
-                                        ? colors
-                                            .map((c) => c["name"] as String)
-                                            .toList()
+                                        ? List.from(brands)
                                         : [];
                               });
                             },
                           ),
                         ),
-                        ...colors.map((item) {
-                          bool isChecked = selectedColors.contains(
-                            item["name"],
+                        ...brands.map((item) {
+                          bool isChecked = selectedBrands.contains(
+                            item,
                           );
                           return Container(
                             margin: const EdgeInsets.only(bottom: 10),
@@ -141,33 +146,16 @@ class _FilterScreenState extends State<FilterScreen> {
                               onChanged: (value) {
                                 setState(() {
                                   if (value == true) {
-                                    selectedColors.add(item["name"]);
+                                    selectedBrands.add(item);
                                   } else {
-                                    selectedColors.remove(item["name"]);
+                                    selectedBrands.remove(item);
                                   }
                                   isAllSelected =
-                                      selectedColors.length == colors.length;
+                                      selectedBrands.length == brands.length;
                                 });
                               },
                               controlAffinity: ListTileControlAffinity.leading,
-                              title: Row(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 12),
-                                    width: 18,
-                                    height: 18,
-                                    decoration: BoxDecoration(
-                                      color: item["color"],
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.black26,
-                                        width: 0.5,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(item["name"]),
-                                ],
-                              ),
+                              title: Text(item)
                             ),
                           );
                         }),
@@ -280,7 +268,7 @@ class _FilterScreenState extends State<FilterScreen> {
             Expanded(
               child: OutlinedButton(
                 onPressed: () {
-                  setState(() => selectedSortOption = 'Relevance');
+                  setState(() => selectedSortOption = '1');
                 },
                 child: const Text('Reset All'),
               ),
@@ -289,7 +277,9 @@ class _FilterScreenState extends State<FilterScreen> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context, selectedSortOption);
+                  print(priceRange.start);
+                  print(priceRange.end);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPageScreen(categoryId: widget.categoryId, categoryName: widget.categoryName, sortById: selectedSortOption, brandSelection: selectedBrands, priceRangeStart: priceRange.start, priceRangeEnd: priceRange.end, ratingRangeStart: ratingRange.start, ratingRangeEnd: ratingRange.end,)));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black87,

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/api_config.dart';
-import 'package:ecommerce_app/models/product.dart';
 
 
 class CategoryService {

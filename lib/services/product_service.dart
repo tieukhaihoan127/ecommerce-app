@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/api_config.dart';
-import 'package:ecommerce_app/models/product.dart';
 
 
 class ProductService {
@@ -26,14 +25,42 @@ class ProductService {
     } 
   }
 
-  Future<List<Map<String,dynamic>>> getProductPages(String status) async{
+  Future<List<Map<String,dynamic>>> getProductPages(String status, String? sortById, List<String>? selectedBrands, double? priceRangeStart, double? priceRangeEnd, double? ratingRangeStart, double? ratingRangeEnd) async{
     try {
 
       if(status == "") {
         status = "All";
       }
 
-      Response response = await _dio.get("${ApiConfig.getProductPagesUrl}$status");
+    String url = "${ApiConfig.getProductPagesUrl}$status";
+
+    List<String> queryParams = [];
+
+    if (sortById != null) {
+      queryParams.add("sortById=${Uri.encodeComponent(sortById)}");
+    }
+
+    if (selectedBrands != null && selectedBrands.isNotEmpty) {
+      queryParams.addAll(
+        selectedBrands.map((brand) => "brand=${Uri.encodeComponent(brand)}"),
+      );
+    }
+
+    if (priceRangeStart != null && priceRangeEnd != null) {
+      queryParams.add("priceStart=$priceRangeStart");
+      queryParams.add("priceEnd=$priceRangeEnd");
+    }
+
+    if (ratingRangeStart != null && ratingRangeEnd != null) {
+      queryParams.add("ratingStart=$ratingRangeStart");
+      queryParams.add("ratingEnd=$ratingRangeEnd");
+    }
+
+    if (queryParams.isNotEmpty) {
+      url += "?" + queryParams.join("&");
+    }
+
+      Response response = await _dio.get(url);
       if (response.statusCode == 200 && response.data["products"].length > 0) {
         return List<Map<String, dynamic>>.from(response.data["products"]);
       }

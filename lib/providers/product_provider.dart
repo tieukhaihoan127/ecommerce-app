@@ -50,13 +50,13 @@ class ProductProvider with ChangeNotifier{
 
   }
 
-  Future<void> getAllProductPages(String status) async{
+  Future<void> getAllProductPages(String status, String? sortById, List<String>? selectedBrand, double? priceRangeStart, double? priceRangeEnd, double? ratingRangeStart, double? ratingRangeEnd) async{
   
     _isLoading = true;
     notifyListeners();
 
     try { 
-      final productss = await _productRepository.getAllProductPages(status);
+      final productss = await _productRepository.getAllProductPages(status, sortById, selectedBrand, priceRangeStart, priceRangeEnd, ratingRangeStart, ratingRangeEnd);
       if(productss.isNotEmpty) {
 
         _products = (productss as List).map<ProductModel>((item) => ProductModel.fromJson(item)).toList();
@@ -75,6 +75,11 @@ class ProductProvider with ChangeNotifier{
       notifyListeners();
     }
 
+  }
+
+  void clearProductsByCategory(String categoryId) {
+    productsByCategory[categoryId] = [];
+    notifyListeners();
   }
 
 }

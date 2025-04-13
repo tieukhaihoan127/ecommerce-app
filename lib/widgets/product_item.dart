@@ -82,7 +82,7 @@ class ProductItem extends StatelessWidget{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product.price! > 0.0 ? "${_formatCurrency((product.price! - (product.price!*product.discountPercentage!)/100) * 1000)} đ" : "Unknown Price",
+                        product.price! > 0.0 ? "${_formatCurrency((product.price! - (product.price!*product.discountPercentage!)/100))} đ" : "Unknown Price",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -90,7 +90,7 @@ class ProductItem extends StatelessWidget{
                       ),
                       SizedBox(width: 6),
                       Text(
-                        product.price! > 0.0 ? "${_formatCurrency(product.price! * 1000)} đ" : "Unknown Price",
+                        product.price! > 0.0 ? "${_formatCurrency(product.price!)} đ" : "Unknown Price",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 12,
@@ -103,7 +103,7 @@ class ProductItem extends StatelessWidget{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product.price! > 0.0 ? "${_formatCurrency(product.price! * 1000)} đ" : "Unknown Price",
+                        product.price! > 0.0 ? "${_formatCurrency(product.price!)} đ" : "Unknown Price",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

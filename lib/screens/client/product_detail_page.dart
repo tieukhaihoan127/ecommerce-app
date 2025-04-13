@@ -84,12 +84,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Row(
                     children: [
                       Text(
-                        "${_formatCurrency(productVariant != null ? ((productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100) * 1000) : ((widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100) * 1000))} đ",
+                        "${_formatCurrency(productVariant != null ? ((productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100)) : ((widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100)))} đ",
                         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(width: 8),
                       Text(
-                        "${_formatCurrency(productVariant != null ? (productVariant!.price! * 1000) : (widget.productModel.price! * 1000))} đ",
+                        "${_formatCurrency(productVariant != null ? (productVariant!.price!) : (widget.productModel.price!))} đ",
                         style: TextStyle(
                           decoration: TextDecoration.lineThrough,
                           color: Colors.grey,
@@ -284,7 +284,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      "${_formatCurrency(productVariant != null ? ((productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100) * 1000 * quantity) : ((widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100) * 1000 * quantity))} đ",
+                      "${_formatCurrency(productVariant != null ? ((productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100) * quantity) : ((widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100) * quantity))} đ",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class CarouselProduct extends StatefulWidget {
@@ -18,8 +16,6 @@ late List<Widget> _pages;
 int _activePage = 0;
 
 final PageController _pageController = PageController(initialPage: 0);
-
-Timer? _timer;
 
 class _CarouselProductState extends State<CarouselProduct>  {
 

@@ -2,7 +2,6 @@ import 'package:ecommerce_app/models/user_login.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
 import 'package:ecommerce_app/screens/client/password_recovery.dart';
-import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/screens/client/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -2,10 +2,7 @@ import 'dart:io';
 
 import 'package:ecommerce_app/helpers/image_upload.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
-import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
-import 'package:ecommerce_app/screens/client/bottom_nav.dart';
-import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
