@@ -1,6 +1,6 @@
 class ApiConfig {
 
-  static const String baseUrl = 'http://192.168.1.6:3030/';
+  static const String baseUrl = 'http://192.168.1.4:3030/';
   static const String registerUrl = '${baseUrl}users/register';
   static const String addressUrl = 'https://vn-public-apis.fpo.vn/';
   static const String cityUrl = '${addressUrl}provinces/getAll?limit=-1';
@@ -15,5 +15,9 @@ class ApiConfig {
   static const String getCategoriesUrl = '${baseUrl}categories/';
   static const String getProductsUrl = '${baseUrl}products/';
   static const String getProductPagesUrl = '${baseUrl}products/pages/';
+  static const String getCartUrl = '${baseUrl}cart/';
+  static const String addCartUrl = '${baseUrl}cart/add/';
+  static const String updateCartUrl = '${baseUrl}cart/update/';
+  static const String deleteCartUrl = '${baseUrl}cart/delete/';
   
 }

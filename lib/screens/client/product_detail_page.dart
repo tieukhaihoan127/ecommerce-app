@@ -1,10 +1,12 @@
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/models/product_variant.dart';
+import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/widgets/app_bar_product.dart';
 import 'package:ecommerce_app/widgets/carousel_product.dart';
 import 'package:ecommerce_app/widgets/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
 
@@ -22,6 +24,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return Scaffold(
       appBar: AppBarProductHelper(categoryName: "Laptop",), 
       body: SingleChildScrollView(
@@ -252,48 +257,64 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Container(
-          height: 56,
-          decoration: BoxDecoration(
-            color: const Color(0xFF0F1C2F),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Icon(Icons.shopping_bag_outlined, color: Colors.white),
-                    SizedBox(width: 8),
-                    Text(
-                      'Add To Cart',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: 1,
-                    height: 32,
-                    color: Colors.white24,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      "${_formatCurrency(productVariant != null ? ((productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100) * quantity) : ((widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100) * quantity))} đ",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+        child: GestureDetector(
+          onTap: () async {
+            String? color = productVariant == null ? widget.productModel.color : productVariant?.color;
+            String message = await cartProvider.addProductToCart(widget.productModel.id!, color!, quantity);
+            if(cartProvider.errorMessage.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message)),
+              );
+            }
+            else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(cartProvider.errorMessage)),
+              );
+            }
+          },
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+              color: const Color(0xFF0F1C2F),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Icon(Icons.shopping_bag_outlined, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text(
+                        'Add To Cart',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                       ),
+                    ],
+                  ),
+                ),
+                Row(
+                  children: [
+                    Container(
+                      width: 1,
+                      height: 32,
+                      color: Colors.white24,
                     ),
-                  )
-                ],
-              )
-            ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "${_formatCurrency(productVariant != null ? ((productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100) * quantity) : ((widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100) * quantity))} đ",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -39,7 +39,9 @@ class _CarouselState extends State<Carousel>  {
     super.initState();
     _pages = widget.imagePaths.map((path) => ImagePlaceHolder(imagePath: path)).toList();
 
-    startTime();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      startTime();
+    });
   }
 
   @override

@@ -1,8 +1,10 @@
 import 'package:ecommerce_app/providers/address_provider.dart';
+import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/providers/category_provider.dart';
 import 'package:ecommerce_app/providers/product_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
+import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
@@ -12,8 +14,12 @@ import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:ecommerce_app/screens/client/signup.dart';
 import 'package:ecommerce_app/screens/client/submit_otp.dart';
 import 'package:ecommerce_app/widgets/carousel.dart';
+import 'package:ecommerce_app/widgets/cart_item_card.dart';
+import 'package:ecommerce_app/widgets/order_info_section.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -22,10 +28,21 @@ void main() {
       ChangeNotifierProvider(create: (context) => AddressProvider()),
       ChangeNotifierProvider(create: (context) => ProductProvider()),
       ChangeNotifierProvider(create: (context) => CategoryProvider()),
+      ChangeNotifierProvider(create: (context) => CartProvider()),
     ],
     child: MyApp(),
     )
   );
+}
+
+Future<String> getSessionId() async {
+  final prefs = await SharedPreferences.getInstance();
+  String? sessionId = prefs.getString('session_id');
+  if (sessionId == null) {
+    sessionId = const Uuid().v4(); 
+    await prefs.setString('session_id', sessionId);
+  }
+  return sessionId;
 }
 
 class MyApp extends StatelessWidget {
@@ -33,6 +50,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getSessionId();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -40,7 +58,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
-      home: CategoryScreen(),
+      home: Signin(),
     );
   }
 }

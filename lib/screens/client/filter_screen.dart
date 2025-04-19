@@ -268,7 +268,13 @@ class _FilterScreenState extends State<FilterScreen> {
             Expanded(
               child: OutlinedButton(
                 onPressed: () {
-                  setState(() => selectedSortOption = '1');
+                  setState(() {
+                    selectedTab = 0;
+                    selectedSortOption = '1';
+                    selectedBrands = [];
+                    priceRange = const RangeValues(0, 100000000);
+                    ratingRange = const RangeValues(0.0, 5.0);
+                  });
                 },
                 child: const Text('Reset All'),
               ),

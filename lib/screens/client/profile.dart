@@ -6,21 +6,33 @@ import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class Profile extends StatelessWidget{
 
   const Profile({ super.key });
+
+  Future<String> getSessionId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? sessionId = prefs.getString('session_id');
+    if (sessionId == null) {
+      sessionId = const Uuid().v4(); 
+      await prefs.setString('session_id', sessionId);
+    }
+    return sessionId;
+  }
 
   Future<void> logout(BuildContext context, UserProvider user) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove("token");
     user.resetUser();
+    getSessionId();
 
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => BottomNavBar()),
-      (route) => false, // Xóa tất cả route trước đó
+      (route) => false, 
     );
 
   }

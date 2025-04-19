@@ -1,9 +1,11 @@
+import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
 import 'package:ecommerce_app/screens/client/order.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart' show Provider;
 
 class BottomNavBar extends StatefulWidget {
 
@@ -21,7 +23,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<Widget>  _screens = [
     HomeScreen(),
     CategoryScreen(),
-    Cart(),
+    CartScreen(),
     Order(),
     Profile()
   ];
@@ -29,6 +31,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedScreenIndex = index;
+
+      if(index == 2) {
+        final cartProvider = Provider.of<CartProvider>(context, listen: false);
+        cartProvider.getAllCarts();
+      }
+
     });
   }
   
