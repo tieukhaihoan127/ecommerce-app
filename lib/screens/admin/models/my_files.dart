@@ -23,19 +23,19 @@ List demoMyFiles = [
   ),
   CloudStorageInfo(
     title: "Tổng đơn hàng",
-    svgSrc: "",
+    svgSrc: "assets/icons/don_hang.svg",
     total: "54",
     color: Color(0xFFFFA113),
   ),
   CloudStorageInfo(
     title: "Số sản phẩm",
-    svgSrc: "",
+    svgSrc: "assets/icons/pc.svg",
     total: "342",
     color: Color(0xFFA4CDFF),
   ),
   CloudStorageInfo(
     title: "Số loại sản phẩm",
-    svgSrc: "",
+    svgSrc: "assets/icons/pc_component.svg",
     total: "88",
     color: Color(0xFF007EE5),
   ),
