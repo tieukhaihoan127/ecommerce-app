@@ -258,7 +258,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GestureDetector(
-          onTap: () async {
+          onTap: cartProvider.isLoading ? null : () async {
             String? color = productVariant == null ? widget.productModel.color : productVariant?.color;
             String message = await cartProvider.addProductToCart(widget.productModel.id!, color!, quantity);
             if(cartProvider.errorMessage.isEmpty) {
@@ -278,7 +278,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               color: const Color(0xFF0F1C2F),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Row(
+            child: cartProvider.isLoading ?  
+            Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            ) :
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
