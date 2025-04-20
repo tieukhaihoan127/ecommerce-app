@@ -34,6 +34,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
       if(index == 2) {
         final cartProvider = Provider.of<CartProvider>(context, listen: false);
+        cartProvider.clearCart();
         cartProvider.getAllCarts();
       }
 

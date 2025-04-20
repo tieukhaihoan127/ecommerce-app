@@ -15,22 +15,12 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
 
-  List<CartModel>? carts;
-
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   Future.microtask(() {
-  //     Provider.of<CartProvider>(context, listen: false).getAllCarts();
-  //   });
-  // }
-
-
   @override
   Widget build(BuildContext context) {
 
     final cartProvider = Provider.of<CartProvider>(context);
+    final cartItems = cartProvider.carts;
+    final totalPrice = cartProvider.totalPrice;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +30,7 @@ class _CartScreenState extends State<CartScreen> {
         centerTitle: true,
         leading: BackButton(color: Colors.black),
       ),
-      bottomNavigationBar: cartProvider.isLoading ? 
+      bottomNavigationBar: cartItems.isEmpty ? 
       null : 
       Container(
         padding: EdgeInsets.all(16),
@@ -52,7 +42,7 @@ class _CartScreenState extends State<CartScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Total price\n\"${_formatCurrencyDouble(cartProvider.totalPrice! + cartProvider.shippingFee! + ((cartProvider.totalPrice! * cartProvider.taxes!)/100))} đ",
+              "Total price\n\"${_formatCurrencyDouble(totalPrice! + cartProvider.shippingFee! + ((totalPrice! * cartProvider.taxes!)/100))} đ",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             ElevatedButton(
@@ -69,16 +59,38 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
       ),
-      body: ListView(
+      body: cartProvider.isLoading ? Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) : cartItems.isEmpty ? 
+      const Center(child: Text('Your cart is empty')) :  
+      ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          if(cartProvider.isLoading)
-            const Center(child: CircularProgressIndicator())
-          else if(cartProvider.carts.isEmpty)
-            const Center(child: Text("Không có sản phẩm nào trong giỏ hàng"),)
-          else
-            ...[
-              ...cartProvider.carts.map((item) => CartItemCard(productCart: item,)).toList(),
+          ...cartProvider.carts.map((item) => CartItemCard(
+            productCart: item, 
+            onQuantityChangedUp: (newQuantity) async {
+              final message = await cartProvider.updateIncrementProductInCart(item.productId!, item.color!, newQuantity);
+              if(message != "") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(message)),
+                );
+              }
+            },
+            onQuantityChangedDown: (newQuantity) async {
+              final message = await cartProvider.updateDecrementProductInCart(item.productId!, item.color!, newQuantity);
+              if(message != "") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(message)),
+                );
+              }
+            },
+            onRemove: () async {
+              final message = await cartProvider.deleteProductFromCart(item.productId!, item.color!);
+              if(message != "") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(message)),
+                );
+              }
+            },
+            )).toList(),
               const SizedBox(height: 10),
               const Text(
                 "Promo Code",
@@ -121,8 +133,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              buildOrderInfo(cartProvider.totalPrice ?? 0,cartProvider.taxes ?? 0,cartProvider.shippingFee ?? 0)
-            ]
+              buildOrderInfo(totalPrice ?? 0,cartProvider.taxes ?? 0,cartProvider.shippingFee ?? 0)
         ],
       ),
     );

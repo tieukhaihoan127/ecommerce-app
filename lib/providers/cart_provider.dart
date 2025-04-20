@@ -123,9 +123,6 @@ class CartProvider with ChangeNotifier{
 
   Future<String> deleteProductFromCart(String productId, String color) async {
 
-    _isLoading = true;
-    notifyListeners();
-
     try {
 
       final prefs = await SharedPreferences.getInstance();
@@ -141,6 +138,13 @@ class CartProvider with ChangeNotifier{
       final cartResponse = await _cartRepository.deleteCart(product, productId);
 
       if(cartResponse != "") {
+
+        final index = _carts.indexWhere((item) => item.productId == productId && item.color == color);
+        if (index == -1) return "";
+
+        _totalPrice = _totalPrice! - _carts[index].totalPrice!;
+        _carts.removeAt(index);
+
         _errorMessage = "";
         notifyListeners();
         return cartResponse;
@@ -154,7 +158,6 @@ class CartProvider with ChangeNotifier{
       _errorMessage = e.toString();
     }
     finally {
-      _isLoading = false;
       notifyListeners();
     }
 
@@ -162,11 +165,7 @@ class CartProvider with ChangeNotifier{
 
   } 
 
-  Future<String> updateProductInCart(String productId, String color, int quantity) async {
-
-    _isLoading = true;
-    notifyListeners();
-
+  Future<String> updateIncrementProductInCart(String productId, String color, int quantity) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       String? sessionId = prefs.getString('session_id');
@@ -182,6 +181,14 @@ class CartProvider with ChangeNotifier{
       final cartResponse = await _cartRepository.updateCart(product, productId);
 
       if(cartResponse != "") {
+
+        final index = _carts.indexWhere((item) => item.productId == productId && item.color == color);
+        if (index == -1) return "";
+
+        _carts[index].quantity = _carts[index].quantity! + 1;
+        _carts[index].totalPrice = _carts[index].quantity! * _carts[index].carts!.priceNew!;
+        _totalPrice = _totalPrice! +  _carts[index].carts!.priceNew!;
+
         _errorMessage = "";
         notifyListeners();
         return cartResponse;
@@ -195,12 +202,67 @@ class CartProvider with ChangeNotifier{
       _errorMessage = e.toString();
     }
     finally {
-      _isLoading = false;
       notifyListeners();
     }
 
     return "";
 
   } 
+
+  Future<String> updateDecrementProductInCart(String productId, String color, int quantity) async {
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? sessionId = prefs.getString('session_id');
+      String? tokenId = prefs.getString('token');
+
+      var product = AddToCartModel(
+        sessionId: sessionId,
+        tokenId: tokenId,
+        color: color,
+        quantity: quantity
+      );
+
+      final cartResponse = await _cartRepository.updateCart(product, productId);
+
+      if(cartResponse != "" ) {
+
+        final index = _carts.indexWhere((item) => item.productId == productId && item.color == color);
+        if (index == -1) return "";
+
+        if(_carts[index].quantity != 1) {
+          _carts[index].quantity = _carts[index].quantity! - 1;
+          _carts[index].totalPrice = _carts[index].quantity! * _carts[index].carts!.priceNew!;
+          _totalPrice = _totalPrice! - _carts[index].carts!.priceNew!;
+        }
+        else {
+          _totalPrice = _totalPrice! - _carts[index].totalPrice!;
+          _carts.removeAt(index);
+        }
+
+        _errorMessage = "";
+        notifyListeners();
+        return cartResponse;
+      }
+      else {
+        _errorMessage = "Cập nhật sản phẩm trong giỏ hàng thất bại!";
+        notifyListeners();
+      }
+
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      notifyListeners();
+    }
+
+    return "";
+
+  }
+
+  void clearCart() {
+    _carts = [];
+    notifyListeners();
+  }
 
 }

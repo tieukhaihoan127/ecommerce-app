@@ -9,7 +9,13 @@ class CartItemCard extends StatefulWidget {
 
   CartModel productCart;
 
-  CartItemCard({super.key, required this.productCart});
+  final Function(int) onQuantityChangedUp;
+
+  final Function(int) onQuantityChangedDown;
+
+  final VoidCallback onRemove;
+
+  CartItemCard({super.key, required this.productCart, required this.onQuantityChangedUp, required this.onQuantityChangedDown, required this.onRemove});
 
   @override
   State<CartItemCard> createState() => _CartItemCardState();
@@ -17,49 +23,27 @@ class CartItemCard extends StatefulWidget {
 
 class _CartItemCardState extends State<CartItemCard> {
 
-  void _increment(CartProvider cart) async {
+  bool _isUpdating = false;
 
-    int newCount = widget.productCart.quantity! + 1;
-
-    String? color = widget.productCart.color;
-    String? productId = widget.productCart.productId;
-    String message = await cart.updateProductInCart(productId!, color!, newCount);
-    await cart.getAllCarts();
-    if (!mounted) return;
-    if(cart.errorMessage.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
-    }
-    else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(cart.errorMessage)),
-      );
-    }
+  void _changeQuantityUp(int delta) async {
+    final newQty = widget.productCart.quantity! + delta;
+    setState(() => _isUpdating = true);
+    await widget.onQuantityChangedUp(newQty);
+    setState(() => _isUpdating = false);
   }
 
-  void _decrement(CartProvider cart) async {
-    if (widget.productCart.quantity! > 1) {
-      int newCount = widget.productCart.quantity! - 1;
-      String? color = widget.productCart.color;
-      String? productId = widget.productCart.productId;
+  void _changeQuantityDown(int delta) async {
+    final newQty = widget.productCart.quantity! + delta;
+    if (newQty <= 0) return;
+    setState(() => _isUpdating = true);
+    await widget.onQuantityChangedDown(newQty);
+    setState(() => _isUpdating = false);
+  }
 
-      String message = await cart.updateProductInCart(productId!, color!, newCount);
-      await cart.getAllCarts();
-
-      if (!mounted) return;
-
-      if (cart.errorMessage.isEmpty) {
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(cart.errorMessage)),
-        );
-      }
-    }
+  void _removeItem() async {
+    setState(() => _isUpdating = true);
+    widget.onRemove();
+    setState(() => _isUpdating = false);
   }
 
 
@@ -68,103 +52,110 @@ class _CartItemCardState extends State<CartItemCard> {
 
     final cartProvider = Provider.of<CartProvider>(context);
     final currentQty = widget.productCart.quantity ?? 0;
+    final currentPrice = widget.productCart.totalPrice ?? 0;
+    final currentPriceNew = widget.productCart.carts?.price ?? 0;
 
-    return Card(
-      margin: const EdgeInsets.symmetric( vertical: 14),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                widget.productCart.carts?.thumbnail ?? "Empty",
-                width: 80,
-                height: 110,
-                fit: BoxFit.cover,
+    return Opacity(
+      opacity: _isUpdating ? 0.5 : 1,
+      child: _isUpdating ? Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) :
+       Card(
+        margin: const EdgeInsets.symmetric( vertical: 14),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  widget.productCart.carts?.thumbnail ?? "Empty",
+                  width: 80,
+                  height: 110,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.productCart.carts?.title ?? "",
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                          onPressed: () async {
-                            String? color = widget.productCart.color;
-                            String? productId = widget.productCart.productId;
-                            String message = await cartProvider.deleteProductFromCart(productId!, color!);
-                            await cartProvider.getAllCarts();
-                            if(cartProvider.errorMessage.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(message)),
-                              );
-                            }
-                            else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(cartProvider.errorMessage)),
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.delete, color: Colors.grey),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.productCart.carts?.title ?? "",
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                      )
-                    ],
-                  ),
-                  // const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text("Qty: ${widget.productCart.quantity ?? 0}", style: TextStyle(color: Colors.grey)),
-                      const SizedBox(width: 8),
-                      const Text("|", style: TextStyle(color: Colors.grey)),
-                      const SizedBox(width: 8),
-                      _colorDot(widget.productCart.color ?? "")
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: 
-                        [
-                          if(widget.productCart.carts!.discountPercentage! <= 0)
-                            Text(
-                              "${_formatCurrency(widget.productCart.carts!.price! * widget.productCart.quantity!)} đ",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            )
-                          else
-                            Text(
-                              "${_formatCurrency(widget.productCart.totalPrice!)} đ",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            Text(
-                              "${_formatCurrency(widget.productCart.carts!.price! * widget.productCart.quantity!)} đ",
-                              style: TextStyle(fontSize: 14, color: Colors.grey, decoration: TextDecoration.lineThrough),
-                            ),
-                        ],
-                      ),
-                      _counterControl(cartProvider, currentQty)
-                    ],
-                  ),
-                  // const SizedBox(height: 12),
-                ],
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            onPressed: _removeItem,
+                            // () async {
+                            //   String? color = widget.productCart.color;
+                            //   String? productId = widget.productCart.productId;
+                            //   String message = await cartProvider.deleteProductFromCart(productId!, color!);
+                            //   await cartProvider.getAllCarts();
+                            //   if(cartProvider.errorMessage.isEmpty) {
+                            //     ScaffoldMessenger.of(context).showSnackBar(
+                            //       SnackBar(content: Text(message)),
+                            //     );
+                            //   }
+                            //   else {
+                            //     ScaffoldMessenger.of(context).showSnackBar(
+                            //       SnackBar(content: Text(cartProvider.errorMessage)),
+                            //     );
+                            //   }
+                            // },
+                            icon: const Icon(Icons.delete, color: Colors.grey),
+                          ),
+                        )
+                      ],
+                    ),
+                    // const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Text("Qty: ${currentQty ?? 0}", style: TextStyle(color: Colors.grey)),
+                        const SizedBox(width: 8),
+                        const Text("|", style: TextStyle(color: Colors.grey)),
+                        const SizedBox(width: 8),
+                        _colorDot(widget.productCart.color ?? "")
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: 
+                          [
+                            if(widget.productCart.carts!.discountPercentage! <= 0)
+                              Text(
+                                "${_formatCurrency(currentPriceNew * currentQty)} đ",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              )
+                            else
+                              Text(
+                                "${_formatCurrency(currentPrice)} đ",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Text(
+                                "${_formatCurrency(currentPriceNew * currentQty)} đ",
+                                style: TextStyle(fontSize: 14, color: Colors.grey, decoration: TextDecoration.lineThrough),
+                              ),
+                          ],
+                        ),
+                        _counterControl(cartProvider, currentQty)
+                      ],
+                    ),
+                    // const SizedBox(height: 12),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -213,7 +204,7 @@ class _CartItemCardState extends State<CartItemCard> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _circleButton(Icons.remove, Colors.grey.shade200, Colors.black, () => _decrement(cart)),
+          _circleButton(Icons.remove, Colors.grey.shade200, Colors.black, () => _changeQuantityDown(-1)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
@@ -221,7 +212,7 @@ class _CartItemCardState extends State<CartItemCard> {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
-          _circleButton(Icons.add, Colors.black, Colors.white, () => _increment(cart))
+          _circleButton(Icons.add, Colors.black, Colors.white, () => _changeQuantityUp(1))
         ],
       ),
     );
