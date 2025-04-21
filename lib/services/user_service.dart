@@ -206,4 +206,37 @@ class UserService {
 
   }
 
+  Future<Map<String,dynamic>?> getUserById(String tokenId) async {
+    try {
+      
+      Response response = await _dio.post(
+        ApiConfig.getUserUrl,
+        data: {"token": tokenId},
+        options: Options(headers: {'Content-Type': 'application/json'}) 
+      );
+
+      print("Server Response: ${response.data}");
+
+      if (response.data != null && response.statusCode == 200) {
+        return response.data["user"];
+      }
+      else if(response.data != null && response.statusCode == 401) {
+        return null;
+      }
+      else {
+        return await Future.error("Lỗi hệ thống, không nhận được OTP!");
+      }
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}");
+
+      if (e.response != null && e.response?.data != null) {
+        final errorMessage = e.response?.data['error'] ?? 'Lấy thông tin người dùng thất bại!';
+        return Future.error(errorMessage);
+      }
+
+      return Future.error("Lỗi kết nối! Vui lòng thử lại.");
+    }
+  }
+
 }

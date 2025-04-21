@@ -70,29 +70,43 @@ class _SignupState extends State<Signup> {
               const SizedBox(height: 25,),
               Text(
                 "Shipping Address",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black
-                ),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 25),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _selectProvince(context, addressProvider, "Choose your province"),
-                  const SizedBox(width: 20,),
-                  _selectDistrict(context, addressProvider, "Choose your district")
+                  _selectProvince(
+                    context,
+                    addressProvider,
+                    "Choose your province",
+                  ),
                 ],
               ),
-              const SizedBox(height: 25,),
+              const SizedBox(height: 25),
               Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _selectDistrict(
+                    context,
+                    addressProvider,
+                    "Choose your district",
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25),
+              Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _selectWard(context, addressProvider, "Choose your ward"),
-                  const SizedBox(width: 20,),
-                  _selectAddress(context)
                 ],
               ),
-              const SizedBox(height: 25,),
+              const SizedBox(height: 25),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [_selectAddress(context)],
+              ),
+              const SizedBox(height: 25),
               _signUpButton(context, userProvider)
             ],
           ),

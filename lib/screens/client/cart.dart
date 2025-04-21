@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
+import 'package:ecommerce_app/screens/client/shipping_info.dart';
 import 'package:ecommerce_app/widgets/cart_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -46,7 +47,9 @@ class _CartScreenState extends State<CartScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen()));
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),

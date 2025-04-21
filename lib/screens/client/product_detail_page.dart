@@ -248,7 +248,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ],
                     ),
                   )
-              
                 ],
               ),
             ),

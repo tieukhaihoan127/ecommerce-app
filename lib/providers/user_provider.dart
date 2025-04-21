@@ -29,6 +29,19 @@ class UserProvider with ChangeNotifier {
 
   String get token => _token;
 
+  // Future<void> getUserById(String tokenId) async {
+  //   try {
+  //     final user = await _userRepository.getUserById(tokenId);
+
+  //     if(user != null) {
+
+  //     }
+  //   } catch (e) {
+      
+  //   }
+
+  // }
+
   Future<void> addUser(UserModel user) async {
     _isLoading = true;
     notifyListeners();
