@@ -43,12 +43,13 @@ class _CartScreenState extends State<CartScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Total price\n\"${_formatCurrencyDouble(totalPrice! + cartProvider.shippingFee! + ((totalPrice! * cartProvider.taxes!)/100))} đ",
+              "Total price\n${_formatCurrencyDouble(totalPrice! + cartProvider.shippingFee! + ((totalPrice! * cartProvider.taxes!)/100))} đ",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen()));
+                var price = totalPrice! + cartProvider.shippingFee! + ((totalPrice! * cartProvider.taxes!)/100);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen(cartId: cartProvider.cartId!, totalPrice: price,)));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,

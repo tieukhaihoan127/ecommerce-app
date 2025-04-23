@@ -27,6 +27,10 @@ class CartProvider with ChangeNotifier{
 
   int? get shippingFee => _shippingFee;
 
+  String? _cartId;
+
+  String? get cartId => _cartId;
+
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
@@ -63,7 +67,7 @@ class CartProvider with ChangeNotifier{
         _totalPrice = cartResponse['totalPrice'];
         _taxes = cartResponse['taxes'];
         _shippingFee = cartResponse['shippingFee'];
-        // _totalPrice = _carts.fold(0, (sum, item) => sum! + (item.totalPrice ?? 0));
+        _cartId = cartResponse['cartId'];
       }
 
       

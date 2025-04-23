@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/providers/address_provider.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/providers/category_provider.dart';
+import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/providers/product_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
@@ -8,6 +9,7 @@ import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
+import 'package:ecommerce_app/screens/client/payment_method.dart';
 import 'package:ecommerce_app/screens/client/product_detail_page.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
@@ -29,6 +31,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => ProductProvider()),
       ChangeNotifierProvider(create: (context) => CategoryProvider()),
       ChangeNotifierProvider(create: (context) => CartProvider()),
+      ChangeNotifierProvider(create: (context) => OrderProvider()),
     ],
     child: MyApp(),
     )
@@ -58,7 +61,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
-      home: Signin(),
+      home: BottomNavBar()
     );
   }
 }

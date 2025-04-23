@@ -1,12 +1,19 @@
+import 'package:ecommerce_app/models/checkout_order.dart';
 import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/providers/address_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
+import 'package:ecommerce_app/screens/client/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ShippingInfoScreen extends StatefulWidget {
-  const ShippingInfoScreen({super.key});
+
+  final String cartId;
+
+  final double totalPrice;
+
+  const ShippingInfoScreen({super.key, required this.cartId, required this.totalPrice});
 
   _ShippingInfoScreenState createState() => _ShippingInfoScreenState();
 }
@@ -378,47 +385,35 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
   }
 
   Widget _submitAddress(BuildContext context) {
-    return Container(
-      height: 56,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0F1C2F),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Center(
-        child: Text(
-          "Contiune To Payment",
-          style: TextStyle(color: Colors.white, fontSize: 16),
+    return GestureDetector(
+      onTap: () {
+        final order =  CheckoutOrderModel(
+          cartId: widget.cartId,
+          email: _emailController.text,
+          fullName: _nameController.text,
+          phone: _phoneController.text,
+          city: _selectedProvinceName,
+          ward: _selectedDistrictName,
+          district: _selectedWardName,
+          address: _addressController.text
+        );
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentSelectionScreen(order: order, totalPrice: widget.totalPrice)));
+      },
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          color: const Color(0xFF0F1C2F),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Center(
+          child: Text(
+            "Contiune To Payment",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
         ),
       ),
     );
   }
 
-  Future<void> _registerUser(
-    BuildContext context,
-    UserProvider userProvider,
-  ) async {
-    // final user = UserModel(
-    //   email: _emailController.text,
-    //   fullName: _nameController.text,
-    //   password: _passwordController.text,
-    //   shippingAddress: ShippingAddress(
-    //     city: _selectedProvinceName!,
-    //     district: _selectedDistrictName!,
-    //     ward: _selectedWardName!,
-    //     address: _addressController.text
-    //   )
-    // );
-
-    // await userProvider.addUser(user);
-
-    if (userProvider.errorMessage.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Sign up successfully")));
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(userProvider.errorMessage)));
-    }
-  }
 }

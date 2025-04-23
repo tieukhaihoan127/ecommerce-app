@@ -68,6 +68,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         onTap: () {
                           setState(() {
                             productVariant = null;
+                            quantity = 1;
                           });
                         }
                       ),
