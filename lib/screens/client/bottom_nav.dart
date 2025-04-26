@@ -1,8 +1,10 @@
 import 'package:ecommerce_app/providers/cart_provider.dart';
+import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
 import 'package:ecommerce_app/screens/client/order.dart';
+import 'package:ecommerce_app/screens/client/order_history.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart' show Provider;
@@ -24,7 +26,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     HomeScreen(),
     CategoryScreen(),
     CartScreen(),
-    Order(),
+    OrderHistoryPageScreen(),
     Profile()
   ];
 
@@ -36,6 +38,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
         final cartProvider = Provider.of<CartProvider>(context, listen: false);
         cartProvider.clearCart();
         cartProvider.getAllCarts();
+      }
+
+      if(index == 3) {
+        final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+        orderProvider.clearOrder();
+        orderProvider.getAllHistoryOrders();
       }
 
     });

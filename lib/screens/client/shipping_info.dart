@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/models/checkout_order.dart';
 import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:ecommerce_app/models/user.dart';
@@ -6,6 +7,7 @@ import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:collection/collection.dart';
 
 class ShippingInfoScreen extends StatefulWidget {
 
@@ -13,7 +15,13 @@ class ShippingInfoScreen extends StatefulWidget {
 
   final double totalPrice;
 
-  const ShippingInfoScreen({super.key, required this.cartId, required this.totalPrice});
+  final List<CartModel> carts;
+
+  final int taxes;
+
+  final int shippingFee;
+
+  const ShippingInfoScreen({super.key, required this.cartId, required this.totalPrice, required this.carts, required this.taxes, required this.shippingFee});
 
   _ShippingInfoScreenState createState() => _ShippingInfoScreenState();
 }
@@ -53,7 +61,7 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
         );
 
         addressProvider.fetchProvinces().then((_) {
-          final province = addressProvider.provinces.firstWhere(
+          final province = addressProvider.provinces.firstWhereOrNull(
             (p) => p.name == _selectedProvinceName,
           );
 
@@ -63,7 +71,9 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
             });
 
             addressProvider.fetchDistrict(province.code).then((_) {
-              final district = addressProvider.districts.firstWhere(
+              print(_selectedDistrictName);
+              print(addressProvider.districts[0].name);
+              final district = addressProvider.districts.firstWhereOrNull(
                 (d) => d.name == _selectedDistrictName,
               );
               if (district != null) {
@@ -72,7 +82,7 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
                 });
 
                 addressProvider.fetchWard(district.code).then((_) {
-                  final ward = addressProvider.wards.firstWhere(
+                  final ward = addressProvider.wards.firstWhereOrNull(
                     (w) => w.name == _selectedWardName,
                   );
                   if (ward != null) {
@@ -87,6 +97,7 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
         });
       }
       Provider.of<AddressProvider>(context, listen: false).fetchProvinces();
+
     });
   }
 
@@ -393,12 +404,12 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
           fullName: _nameController.text,
           phone: _phoneController.text,
           city: _selectedProvinceName,
-          ward: _selectedDistrictName,
-          district: _selectedWardName,
+          ward: _selectedWardName,
+          district: _selectedDistrictName,
           address: _addressController.text
         );
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentSelectionScreen(order: order, totalPrice: widget.totalPrice)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentSelectionScreen(order: order, totalPrice: widget.totalPrice, carts: widget.carts, taxes: widget.taxes, shippingFee: widget.shippingFee,)));
       },
       child: Container(
         height: 56,

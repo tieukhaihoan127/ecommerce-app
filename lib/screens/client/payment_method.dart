@@ -1,6 +1,8 @@
+import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/models/checkout_order.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
+import 'package:ecommerce_app/widgets/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +12,13 @@ class PaymentSelectionScreen extends StatefulWidget {
 
   final double totalPrice;
 
-  const PaymentSelectionScreen({super.key, required this.order, required this.totalPrice});
+  final List<CartModel> carts;
+
+  final int taxes;
+
+  final int shippingFee;
+
+  const PaymentSelectionScreen({super.key, required this.order, required this.totalPrice, required this.carts, required this.taxes, required this.shippingFee});
 
   
   @override
@@ -20,6 +28,8 @@ class PaymentSelectionScreen extends StatefulWidget {
 class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
   String _selectedMethod = 'Cash on Delivery';
 
+  bool isProcessing = false;
+
   final List<PaymentMethod> _methods = [
     PaymentMethod('Cash on Delivery', 'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1745417768/public/blvrkqragz4lwp5btcdf.jpg'),
     PaymentMethod('PayPal', 'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1745417759/public/paczttlewhwarikfgb1s.jpg'),
@@ -27,66 +37,189 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
     PaymentMethod('Google Pay', 'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1745417776/public/fqtdd4hddxmz7a7ctfu2.jpg'),
   ];
 
+  // Widget _showOrderDialog(BuildContext context) {
+  //     return Dialog(
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(20.0),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Container(
+  //               padding: EdgeInsets.all(12),
+  //               decoration: BoxDecoration(
+  //                 color: Colors.black,
+  //                 shape: BoxShape.circle,
+  //               ),
+  //               child: Icon(Icons.check, color: Colors.white, size: 32),
+  //             ),
+  //             const SizedBox(height: 20),
+  //             Text(
+  //               "Congratulations !!",
+  //               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //             ),
+  //             const SizedBox(height: 10),
+  //             Text(
+  //               "Your order is accepted. Your items are on the way and should arrive shortly.",
+  //               textAlign: TextAlign.center,
+  //               style: TextStyle(color: Colors.grey[700]),
+  //             ),
+  //             const SizedBox(height: 24),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context, 'tracking');
+  //               },
+  //               style: ElevatedButton.styleFrom(
+  //                 minimumSize: Size(double.infinity, 48),
+  //                 backgroundColor: Colors.black,
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(10),
+  //                 ),
+  //               ),
+  //               child: Text("Tracking Order", style: TextStyle(color: Colors.white),),
+  //             ),
+  //             const SizedBox(height: 12),
+  //             OutlinedButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context, 'shopping');
+  //               },
+  //               style: OutlinedButton.styleFrom(
+  //                 minimumSize: Size(double.infinity, 48),
+  //                 side: BorderSide(color: Colors.black),
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(10),
+  //                 ),
+  //               ),
+  //               child: Text("Continue Shopping", style: TextStyle(color: Colors.black)),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  // }
+
   Widget _showOrderDialog(BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.check, color: Colors.white, size: 32),
+  final order = widget.order;
+  return Dialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    child: Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                shape: BoxShape.circle,
               ),
-              const SizedBox(height: 20),
-              Text(
-                "Congratulations !!",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              child: Icon(Icons.check, color: Colors.white, size: 32),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Congratulations !!",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "Your order is accepted. Your items are on the way and should arrive shortly.",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+            const SizedBox(height: 20),
+
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Shipping Address", style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Text("${order.fullName}, ${order.phone}"),
+                  Text("${order.address}, ${order.ward}, ${order.district}, ${order.city}"),
+                ],
               ),
-              const SizedBox(height: 10),
-              Text(
-                "Your order is accepted. Your items are on the way and should arrive shortly.",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, 'tracking');
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 48),
-                  backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            ),
+            const SizedBox(height: 20),
+
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Order Details", style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  ...widget.carts.map((p) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(child: Row(children: [Text("x${p.quantity} ${p.carts?.title}  -  "), _colorDot(p.color!)],)),
+                        Text("${_formatCurrency(p.carts!.priceNew!)} đ"),
+                      ],
+                    ),
+                  )),
+                  Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Shipping Fee"),
+                      Text("${_formatCurrency(widget.shippingFee)} đ"),
+                    ],
                   ),
-                ),
-                child: Text("Tracking Order", style: TextStyle(color: Colors.white),),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.pop(context, 'shopping');
-                },
-                style: OutlinedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 48),
-                  side: BorderSide(color: Colors.black),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Tax"),
+                      Text("${widget.taxes} %"),
+                    ],
                   ),
-                ),
-                child: Text("Continue Shopping", style: TextStyle(color: Colors.black)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Total", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("${_formatCurrencyDouble(widget.totalPrice)} đ", style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 24),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, 'tracking');
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+                backgroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text("Tracking Order", style: TextStyle(color: Colors.white),),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () {
+                Navigator.pop(context, 'shopping');
+              },
+              style: OutlinedButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+                side: BorderSide(color: Colors.black),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text("Continue Shopping", style: TextStyle(color: Colors.black)),
+            ),
+          ],
         ),
-      );
-  }
+      ),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -116,15 +249,23 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: isProcessing ? null : () async {
+
+                await orderProvider.createOrder(widget.order);
+
+                while (orderProvider.isLoading) {
+                  await Future.delayed(Duration(milliseconds: 100));
+                }
+
+                setState(() {
+                  isProcessing = false;
+                });
                 final result = await showDialog(
                   context: context,
                   builder: (context) => _showOrderDialog(context),
                 );
-
-                final message = await orderProvider.createOrder(widget.order);
                 
-                if(message != "") {
+                if(orderProvider.isLoading == false) {
                   if (result == 'tracking') {
                     Navigator.pushNamed(context, '/tracking'); 
                   } else if (result == 'shopping') {
@@ -142,7 +283,7 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: Text('Pay Now', style: TextStyle(color: Colors.white)),
+              child: isProcessing ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2,),) : Text('Pay Now', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -182,6 +323,26 @@ class PaymentMethod {
   final String iconPath;
 
   PaymentMethod(this.name, this.iconPath);
+}
+
+Widget _colorDot(String color) {
+    return Container(
+      width: 10,
+      height: 10,
+      decoration: BoxDecoration(
+        color: HexColor(color),
+        shape: BoxShape.circle,
+        border: Border.all(
+          width: 2,
+          color: Colors.black
+        ),
+      ),
+    );
+  }
+
+String _formatCurrency(int price) {
+  final NumberFormat formatter = NumberFormat("#,##0", "vi_VN");
+  return formatter.format(price);
 }
 
 String _formatCurrencyDouble(double price) {

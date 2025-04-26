@@ -9,4 +9,6 @@ class OrderRepository {
 
   Future<String> createOrder(CheckoutOrderModel order) => _orderService.addOrders(order);
 
+  Future<List<Map<String,dynamic>>> getOrderHisotry(String tokenId) => _orderService.getHistoryOrders(tokenId);
+
 }
