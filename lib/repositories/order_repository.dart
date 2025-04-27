@@ -1,7 +1,4 @@
-import 'package:ecommerce_app/models/add_to_cart.dart';
 import 'package:ecommerce_app/models/checkout_order.dart';
-import 'package:ecommerce_app/models/delete_cart.dart';
-import 'package:ecommerce_app/models/user_cart.dart';
 import 'package:ecommerce_app/services/order_service.dart';
 
 class OrderRepository {
@@ -12,5 +9,7 @@ class OrderRepository {
   Future<List<Map<String,dynamic>>> getOrderHisotry(String tokenId) => _orderService.getHistoryOrders(tokenId);
 
   Future<Map<String,dynamic>> getOrderDetail(String orderId) => _orderService.getOrderDetail(orderId);
+
+  Future<List<Map<String,dynamic>>> getOrderStatus(String orderId) => _orderService.getOrderStatusDetail(orderId);
 
 }

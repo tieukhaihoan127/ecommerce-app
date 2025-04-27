@@ -10,6 +10,7 @@ import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/change_user_information.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
 import 'package:ecommerce_app/screens/client/order_history.dart';
+import 'package:ecommerce_app/screens/client/order_tracking.dart';
 import 'package:ecommerce_app/screens/client/payment_method.dart';
 import 'package:ecommerce_app/screens/client/product_detail_page.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';

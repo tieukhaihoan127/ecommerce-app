@@ -22,5 +22,6 @@ class ApiConfig {
   static const String deleteCartUrl = '${baseUrl}cart/delete/';
   static const String checkoutUrl = '${baseUrl}checkout/order/';
   static const String getOrderHistoryUrl = '${baseUrl}checkout/';
+  static const String getOrderStatusUrl = '${baseUrl}checkout/status';
   
 }

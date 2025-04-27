@@ -4,6 +4,7 @@ import 'package:ecommerce_app/models/checkout_order.dart';
 import 'package:ecommerce_app/models/delete_cart.dart';
 import 'package:ecommerce_app/models/order_detail.dart';
 import 'package:ecommerce_app/models/order_history.dart';
+import 'package:ecommerce_app/models/order_status.dart';
 import 'package:ecommerce_app/models/user_cart.dart';
 import 'package:ecommerce_app/repositories/cart_repository.dart';
 import 'package:ecommerce_app/repositories/order_repository.dart';
@@ -22,6 +23,10 @@ class OrderProvider with ChangeNotifier{
   List<OrderHistoryModel>? _historyOrders;
 
   List<OrderHistoryModel>? get historyOrders => _historyOrders;
+
+  List<OrderStatusModel>? _orderStatus;
+
+  List<OrderStatusModel>? get orderStatus => _orderStatus;
 
   OrderDetailModel? _orderDetail;
 
@@ -71,6 +76,33 @@ class OrderProvider with ChangeNotifier{
         _orderDetail = OrderDetailModel.fromJson(orderResponse);
 
         print("Data response: $_orderDetail");
+      }
+
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+  }
+
+  Future<void> getOrderStatus(String orderId) async{
+  
+    _isLoading = true;
+    notifyListeners();
+
+    try { 
+      
+      final orderResponse = await _orderRepository.getOrderStatus(orderId);
+      print("Response: $orderResponse");
+      if(orderResponse.isNotEmpty) {
+        _orderStatus = orderResponse.map<OrderStatusModel>((item) => OrderStatusModel.fromJson(item)).toList();
+
+        print("Data response: $_orderStatus");
       }
 
       _errorMessage = "";

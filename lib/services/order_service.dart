@@ -84,4 +84,29 @@ class OrderService {
     } 
   }
 
+  Future<List<Map<String,dynamic>>> getOrderStatusDetail(String orderId) async {
+    try {
+
+      var url = "${ApiConfig.getOrderStatusUrl}/$orderId";
+
+      Response response = await _dio.get(url);
+      if(response.statusCode == 200 && response.data["status"] != null){
+        List status = response.data["status"];
+        return status.map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e)).toList();
+      }
+      else {
+        return await Future.error("Lỗi hệ thống, không lấy được data!");
+      }
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}");
+
+      if (e.response != null && e.response?.data != null) {
+        final errorMessage = e.response?.data['error'] ?? 'Lấy thông tin trạng thái đơn hàng thất bại!';
+        return Future.error(errorMessage);
+      }
+
+      return Future.error("Lỗi kết nối! Vui lòng thử lại.");
+    } 
+  }
+
 }

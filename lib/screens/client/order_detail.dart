@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
+import 'package:ecommerce_app/screens/client/order_tracking.dart';
 import 'package:ecommerce_app/widgets/order_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -74,6 +75,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   orderProvider.orderDetail?.taxes ?? 0,
                   orderProvider.orderDetail?.shippingFee ?? 0,
                 ),
+
+                const SizedBox(height: 16,),
+                _trackingOrderButton(context, widget.orderId)
               ],
             ),
     );
@@ -262,6 +266,27 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 }
+
+Widget _trackingOrderButton(BuildContext context, String orderId) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderTrackingScreen(orderId: orderId)));
+      },
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          color: const Color(0xFF0F1C2F),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Center(
+          child: Text(
+            "Tracking Order Status",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ),
+      ),
+    );
+  }
 
 String _formatCurrency(int price) {
   final NumberFormat formatter = NumberFormat("#,##0", "vi_VN");
