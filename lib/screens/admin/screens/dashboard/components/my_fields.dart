@@ -20,7 +20,7 @@ class MyFiles extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Thông tin chung",
+              "Thông tin ",
               style: Theme.of(context).textTheme.titleMedium,
             ),
             ElevatedButton.icon(

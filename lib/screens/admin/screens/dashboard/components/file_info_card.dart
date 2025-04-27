@@ -25,8 +25,8 @@ class FileInfoCard extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              height: 60,
-              width: 60,
+              height: 50,
+              width: 50,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
               ),
@@ -36,20 +36,33 @@ class FileInfoCard extends StatelessWidget {
             ),
           ),
           Center(
-            child: Text(
-              info.total!,
-              style: TextStyle(
-                color: primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 25
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                info.total!,
+                style: TextStyle(
+                    color: primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
           Center(
-            child: Text(
-              info.title!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                info.title!,
+                style: TextStyle(
+                    color: Colors.white,
+
+                    fontSize: 20
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
         ],
