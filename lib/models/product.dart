@@ -33,18 +33,6 @@ class ProductModel {
     this.variant
   });
 
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     if (id != null) "_id": id, 
-  //     "email": email,
-  //     "fullName": fullName,
-  //     "password": password,
-  //     "imageUrl": imageUrl,
-  //     "shippingAddress": shippingAddress?.toJson(),
-  //   };
-  // }
-
   @override
   String toString() {
     return 'ProductModel(title: $title, description: $description, thumbnail: $thumbnail, price: $price, discountPercentage: $discountPercentage, images: $images, variant: $variant))';

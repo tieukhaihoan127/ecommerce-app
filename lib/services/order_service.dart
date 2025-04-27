@@ -46,13 +46,37 @@ class OrderService {
         return orders.map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e)).toList();
       }
       else {
-        return await Future.error("Lỗi hệ thống, không thêm được data!");
+        return await Future.error("Lỗi hệ thống, không lấy được data!");
       }
     } on DioException catch (e) {
       print("Dio Error: ${e.response?.data}");
 
       if (e.response != null && e.response?.data != null) {
-        final errorMessage = e.response?.data['error'] ?? 'Thêm đơn hàng thất bại!';
+        final errorMessage = e.response?.data['error'] ?? 'Lấy thông tin tất cả đơn hàng thất bại!';
+        return Future.error(errorMessage);
+      }
+
+      return Future.error("Lỗi kết nối! Vui lòng thử lại.");
+    } 
+  }
+
+  Future<Map<String, dynamic>> getOrderDetail(String orderId) async {
+    try {
+
+      var url = "${ApiConfig.getOrderHistoryUrl}/$orderId";
+
+      Response response = await _dio.get(url);
+      if(response.statusCode == 200 && response.data["order"] != null){
+        return response.data["order"];
+      }
+      else {
+        return await Future.error("Lỗi hệ thống, không lấy được data!");
+      }
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}");
+
+      if (e.response != null && e.response?.data != null) {
+        final errorMessage = e.response?.data['error'] ?? 'Lấy thông tin đơn hàng thất bại!';
         return Future.error(errorMessage);
       }
 

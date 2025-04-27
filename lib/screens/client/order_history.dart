@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/providers/order_provider.dart';
+import 'package:ecommerce_app/screens/client/order_detail.dart';
 import 'package:ecommerce_app/widgets/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -56,7 +57,7 @@ class _OrderHistoryPageScreenState extends State<OrderHistoryPageScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Total: ${_formatCurrencyDouble(order.totalAmount!)} đ'),
+                        Text('Total: ${_formatCurrencyDouble((order.totalAmount!))} đ'),
                         SizedBox(height: 8),
                         Text('Products:'),
                         ...order.products!.map(
@@ -80,7 +81,7 @@ class _OrderHistoryPageScreenState extends State<OrderHistoryPageScreen> {
                               ),
                             ),
                             onPressed: () {
-
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetailScreen(orderId: order.orderId!)));
                             },
                             child: Text(
                               'View Order Detail',

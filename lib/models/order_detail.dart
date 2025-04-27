@@ -1,0 +1,40 @@
+import 'package:ecommerce_app/models/product_order_history.dart';
+import 'package:ecommerce_app/models/product_order_history_detail.dart';
+import 'package:ecommerce_app/models/user_order_detail.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonSerializable()
+class OrderDetailModel {
+  String? orderId;
+  double? totalPrice;
+  List<ProductOrderHistoryDetail>? products;
+  UserOrderDetail? userInfo;
+  int? taxes;
+  int? shippingFee;
+
+  OrderDetailModel({
+    this.orderId,
+    this.totalPrice,
+    this.products,
+    this.userInfo,
+    this.taxes,
+    this.shippingFee
+  });
+
+  @override
+  String toString() {
+    return 'OrderHistoryModel(orderId: $orderId, totalPrice: $totalPrice, products: $products, userInfo: $userInfo, taxes: $taxes, shippingFee: $shippingFee)';
+  }
+
+  factory OrderDetailModel.fromJson(Map<String, dynamic> json) {
+    return OrderDetailModel(
+      orderId: json['orderId'] ?? '',
+      totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
+      products: (json['products'] as List?)?.map((item) => ProductOrderHistoryDetail.fromJson(item)).toList(),
+      userInfo: json['userInfo'] != null ? UserOrderDetail.fromJson(json['userInfo']) : null,
+      taxes: json['taxes'] ?? 0,
+      shippingFee: json['shippingFee'] ?? 0,
+    );
+  }
+
+}

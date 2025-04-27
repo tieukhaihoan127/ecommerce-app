@@ -11,4 +11,6 @@ class OrderRepository {
 
   Future<List<Map<String,dynamic>>> getOrderHisotry(String tokenId) => _orderService.getHistoryOrders(tokenId);
 
+  Future<Map<String,dynamic>> getOrderDetail(String orderId) => _orderService.getOrderDetail(orderId);
+
 }
