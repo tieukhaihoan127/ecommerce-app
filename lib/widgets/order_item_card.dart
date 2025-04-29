@@ -69,7 +69,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
                         children: 
                         [
                           Text(
-                              "${_formatCurrency(widget.product.priceNew!)} đ",
+                              "${_formatCurrency(widget.product.priceNew! * widget.product.quantity!)} đ",
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           )
                         ],

@@ -20,7 +20,7 @@ class ProductCart {
       price: json['price'] ?? 0.0,
       discountPercentage: json['discountPercentage'] ?? 0,
       thumbnail: json['thumbnail'] ?? '',
-      priceNew: json['priceNew'] ?? ''
+      priceNew: json['priceNew'] ?? 0
     );
   }
 

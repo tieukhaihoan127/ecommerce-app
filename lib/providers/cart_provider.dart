@@ -27,6 +27,10 @@ class CartProvider with ChangeNotifier{
 
   int? get shippingFee => _shippingFee;
 
+  int? _loyaltyPoints;
+
+  int? get loyaltyPoints => _loyaltyPoints;
+
   String? _cartId;
 
   String? get cartId => _cartId;
@@ -68,6 +72,7 @@ class CartProvider with ChangeNotifier{
         _taxes = cartResponse['taxes'];
         _shippingFee = cartResponse['shippingFee'];
         _cartId = cartResponse['cartId'];
+        _loyaltyPoints = cartResponse['loyaltyPoint'];
       }
 
       

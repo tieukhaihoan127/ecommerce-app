@@ -11,6 +11,7 @@ class CheckoutOrderModel {
   String? ward; 
   String? district;
   String? address;
+  bool? loyaltyPointUsed;
 
   CheckoutOrderModel({
     this.cartId,
@@ -20,7 +21,8 @@ class CheckoutOrderModel {
     this.city,
     this.ward,
     this.district,
-    this.address
+    this.address,
+    this.loyaltyPointUsed
   });
 
   Map<String, dynamic> toJson() {
@@ -32,7 +34,8 @@ class CheckoutOrderModel {
       "city": city,
       "ward": ward,
       "district": district,
-      "address": address
+      "address": address,
+      "loyaltyPointUsed": loyaltyPointUsed
     };
   }
 

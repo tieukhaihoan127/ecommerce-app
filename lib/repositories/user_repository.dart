@@ -10,7 +10,7 @@ class UserRepository {
 
   final UserService _userService = UserService();
 
-  Future<Map<String,dynamic>?> getUserById(String tokenId) => _userService.getUserById(tokenId);
+  Future<dynamic> getUserById(String tokenId) => _userService.getUserById(tokenId);
  
   Future<void> addUser(UserModel user) => _userService.createUser(user);
 

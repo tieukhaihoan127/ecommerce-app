@@ -206,22 +206,19 @@ class UserService {
 
   }
 
-  Future<Map<String,dynamic>?> getUserById(String tokenId) async {
+  Future<dynamic> getUserById(String tokenId) async {
     try {
       
       Response response = await _dio.post(
         ApiConfig.getUserUrl,
-        data: {"token": tokenId},
+        data: {"tokenId": tokenId},
         options: Options(headers: {'Content-Type': 'application/json'}) 
       );
 
       print("Server Response: ${response.data}");
 
       if (response.data != null && response.statusCode == 200) {
-        return response.data["user"];
-      }
-      else if(response.data != null && response.statusCode == 401) {
-        return null;
+        return response.data;
       }
       else {
         return await Future.error("Lỗi hệ thống, không nhận được OTP!");

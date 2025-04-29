@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getSessionId();
+    Provider.of<UserProvider>(context, listen: false).getUserById();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
-      home: Signin()
+      home: BottomNavBar()
     );
   }
 }

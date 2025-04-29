@@ -29,8 +29,8 @@ class ProductVariant {
       color: json['color'] ?? '',
       thumbnail: json['thumbnail'] ?? '',
       carousel: List<String>.from(json['carousel']) ?? [],
-      price: (json['price'] ?? 0).toDouble(),
-      discountPercentage: (json['discountPercentage'] ?? 0).toDouble(),
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      discountPercentage: (json['discountPercentage'] as num?)?.toDouble() ?? 0.0,
       sku: json['sku'] ?? '',
       stock: json['stock'] ?? '',
     );

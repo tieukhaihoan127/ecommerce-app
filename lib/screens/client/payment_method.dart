@@ -18,7 +18,9 @@ class PaymentSelectionScreen extends StatefulWidget {
 
   final int shippingFee;
 
-  const PaymentSelectionScreen({super.key, required this.order, required this.totalPrice, required this.carts, required this.taxes, required this.shippingFee});
+  final int loyaltyPoint;
+
+  const PaymentSelectionScreen({super.key, required this.order, required this.totalPrice, required this.carts, required this.taxes, required this.shippingFee, required this.loyaltyPoint});
 
   
   @override
@@ -156,7 +158,7 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(child: Row(children: [Text("x${p.quantity} ${p.carts?.title}  -  "), _colorDot(p.color!)],)),
-                        Text("${_formatCurrency(p.carts!.priceNew!)} đ"),
+                        Text("${_formatCurrency(p.carts!.priceNew! * p.quantity!)} đ"),
                       ],
                     ),
                   )),
@@ -171,10 +173,18 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Tax"),
+                      Text("Tax"),  
                       Text("${widget.taxes} %"),
                     ],
                   ),
+                  if(order.loyaltyPointUsed == true) 
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Loyalty Discount"),  
+                        Text("${_formatCurrency(widget.loyaltyPoint)} đ"),
+                      ],
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

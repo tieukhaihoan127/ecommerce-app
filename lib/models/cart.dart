@@ -11,6 +11,7 @@ class CartModel {
   int? totalPrice;
   int? taxes;
   int? shippingFee;
+  double? loyaltyPoint;
 
   CartModel({
     this.id,
@@ -20,7 +21,8 @@ class CartModel {
     this.carts,
     this.totalPrice,
     this.taxes,
-    this.shippingFee
+    this.shippingFee,
+    this.loyaltyPoint
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
@@ -32,7 +34,8 @@ class CartModel {
       carts: json['productInfo'] != null ? ProductCart.fromJson(json['productInfo']) : null,
       totalPrice: json['totalPrice'] ?? 0.0,
       taxes: json['taxes'] ?? 0,
-      shippingFee: json['shippinFee'] ?? 0
+      shippingFee: json['shippingFee'] ?? 0,
+      loyaltyPoint: json['loyaltyPoint'] ?? 0.0,
     );
   }
 

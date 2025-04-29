@@ -3,8 +3,8 @@ class ProductOrderHistory {
   final String? color;
   final String? title;
   final String? thumbnail;
-  final int? price;
-  final int? discountPercentage;
+  final double? price;
+  final double? discountPercentage;
   final int? quantity;
 
   ProductOrderHistory({
@@ -27,8 +27,8 @@ class ProductOrderHistory {
       color: json['color'] ?? '',
       title: json['title'] ?? '',
       thumbnail: json['thumbnail'] ?? '',
-      price: json['price'] ?? 0,
-      discountPercentage: json['discountPercentage'] ?? 0,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      discountPercentage: (json['discountPercentage'] as num?)?.toDouble() ?? 0.0,
       quantity: json['quantity'] ?? 0,
     );
   }

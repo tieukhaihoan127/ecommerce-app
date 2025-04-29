@@ -30,6 +30,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final orderProvider = Provider.of<OrderProvider>(context);
+    int loyalty = 0;
+
+    if(orderProvider.isLoading == false) {
+      loyalty = orderProvider.orderDetail!.loyaltyPoint!;
+      double totalAmount = orderProvider.orderDetail!.totalPrice! + orderProvider.orderDetail!.shippingFee! + ((orderProvider.orderDetail!.totalPrice! * orderProvider.orderDetail!.taxes!) / 100);
+
+      if(loyalty >= totalAmount) {
+        loyalty = totalAmount.toInt();
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -70,10 +80,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 buildPromoCode(),
                 const SizedBox(height: 16),
 
+                _buildLoyaltyPointSection(loyalty),
+                const SizedBox(height: 16,),
+
                 buildOrderInfo(
                   orderProvider.orderDetail?.totalPrice ?? 0,
                   orderProvider.orderDetail?.taxes ?? 0,
                   orderProvider.orderDetail?.shippingFee ?? 0,
+                  orderProvider
                 ),
 
                 const SizedBox(height: 16,),
@@ -174,8 +188,47 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  Widget buildOrderInfo(double subtotal, int taxes, int shippingFee) {
+  Widget _buildLoyaltyPointSection(int loyaltyPoints) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(color: Colors.black12, blurRadius: 6),
+      ],
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          "Loyalty Points Used",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        Text(
+            "${_formatCurrency(loyaltyPoints)} đ",
+            style: TextStyle(
+            color:Colors.black,
+            fontSize: 14,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+  Widget buildOrderInfo(double subtotal, int taxes, int shippingFee, OrderProvider orderProvider) {
     double totalAmount = subtotal + shippingFee + ((subtotal * taxes) / 100);
+
+    if(orderProvider.orderDetail!.loyaltyPoint! >= totalAmount) {
+      totalAmount = 0;
+    }
+    else {
+      totalAmount = totalAmount - orderProvider.orderDetail!.loyaltyPoint!;
+    }
 
     return Container(
       padding: const EdgeInsets.all(16),

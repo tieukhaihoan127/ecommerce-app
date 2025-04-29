@@ -29,18 +29,32 @@ class UserProvider with ChangeNotifier {
 
   String get token => _token;
 
-  // Future<void> getUserById(String tokenId) async {
-  //   try {
-  //     final user = await _userRepository.getUserById(tokenId);
+  Future<void> getUserById() async {
+    
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? tokenId = prefs.getString('token');
 
-  //     if(user != null) {
+      final response = await _userRepository.getUserById(tokenId!);
 
-  //     }
-  //   } catch (e) {
-      
-  //   }
+      if(response != null) {
+        _user = UserModel(
+          id: response["id"],
+          email: response["email"],
+          fullName: response["fullName"],
+          imageUrl: response["imageUrl"],
+          shippingAddress: ShippingAddress.fromJson(response["shippingAddress"])
+        );
 
-  // }
+        _errorMessage = "";
+        notifyListeners();
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
+
+  }
 
   Future<void> addUser(UserModel user) async {
     _isLoading = true;

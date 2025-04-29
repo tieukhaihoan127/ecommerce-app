@@ -16,6 +16,8 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
 
+  bool _useLoyalty = false;
+
   @override
   Widget build(BuildContext context) {
 
@@ -49,7 +51,19 @@ class _CartScreenState extends State<CartScreen> {
             ElevatedButton(
               onPressed: () {
                 var price = totalPrice! + cartProvider.shippingFee! + ((totalPrice! * cartProvider.taxes!)/100);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen(cartId: cartProvider.cartId!, totalPrice: price, carts: cartProvider.carts, taxes: cartProvider.taxes!, shippingFee: cartProvider.shippingFee!,)));
+
+                if(_useLoyalty) {
+
+                  if(price > cartProvider.loyaltyPoints!) {
+                    price = price - cartProvider.loyaltyPoints!;
+                  }
+                  else {
+                    price = 0;
+                  }
+                  
+                }
+
+                Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen(cartId: cartProvider.cartId!, totalPrice: price, carts: cartProvider.carts, taxes: cartProvider.taxes!, shippingFee: cartProvider.shippingFee!, loyaltyPointUsed: _useLoyalty, loyaltyPoint: cartProvider.loyaltyPoints!,)));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -137,14 +151,21 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              buildOrderInfo(totalPrice ?? 0,cartProvider.taxes ?? 0,cartProvider.shippingFee ?? 0)
+              _buildLoyaltyPointSection(cartProvider.loyaltyPoints!),
+              const SizedBox(height: 20),
+              buildOrderInfo(totalPrice ?? 0,cartProvider.taxes ?? 0,cartProvider.shippingFee ?? 0, cartProvider.loyaltyPoints ?? 0)
         ],
       ),
     );
   }
 
-  Widget buildOrderInfo(int subtotal, int taxes, int shippingFee) {
+  Widget buildOrderInfo(int subtotal, int taxes, int shippingFee, int loyaltyPoint) {
     double totalAmount = subtotal + shippingFee + ((subtotal * taxes)/100) ;
+
+    if (_useLoyalty) {
+      totalAmount -= loyaltyPoint.toDouble();
+      if (totalAmount < 0) totalAmount = 0; 
+    }
 
     return Container(
       // margin: EdgeInsets.all(16),
@@ -199,6 +220,55 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
+
+Widget _buildLoyaltyPointSection(int loyaltyPoints) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(color: Colors.black12, blurRadius: 6),
+      ],
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Loyalty Points Discount",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "${_formatCurrency(loyaltyPoints)} đ",
+              style: TextStyle(
+                color: loyaltyPoints > 0 ? Colors.black : Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+        Switch(
+          value: _useLoyalty,
+          onChanged: (loyaltyPoints == 0)
+              ? null 
+              : (bool value) {
+                  setState(() {
+                    _useLoyalty = value;
+                  });
+                },
+          activeColor: Colors.black,
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildInfoRow(String label, int value) {
     return Padding(
