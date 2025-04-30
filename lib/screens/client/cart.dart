@@ -1,11 +1,14 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
+import 'package:ecommerce_app/providers/coupon_provider.dart';
+import 'package:ecommerce_app/screens/client/coupon_page.dart';
 import 'package:ecommerce_app/screens/client/shipping_info.dart';
 import 'package:ecommerce_app/widgets/cart_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -22,8 +25,14 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
 
     final cartProvider = Provider.of<CartProvider>(context);
+    final couponProvider = Provider.of<CouponProvider>(context);
+
     final cartItems = cartProvider.carts;
     final totalPrice = cartProvider.totalPrice;
+    final couponId = couponProvider.code;
+    final couponValue = couponProvider.value;
+
+    print("Coupon Value: $couponValue");
 
     return Scaffold(
       appBar: AppBar(
@@ -63,7 +72,11 @@ class _CartScreenState extends State<CartScreen> {
                   
                 }
 
-                Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen(cartId: cartProvider.cartId!, totalPrice: price, carts: cartProvider.carts, taxes: cartProvider.taxes!, shippingFee: cartProvider.shippingFee!, loyaltyPointUsed: _useLoyalty, loyaltyPoint: cartProvider.loyaltyPoints!,)));
+                if(couponValue! > 0) {
+                  price = price - ((price * couponValue)/100);
+                }
+
+                Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen(cartId: cartProvider.cartId!, totalPrice: price, carts: cartProvider.carts, taxes: cartProvider.taxes!, shippingFee: cartProvider.shippingFee!, loyaltyPointUsed: _useLoyalty, loyaltyPoint: cartProvider.loyaltyPoints!, couponValue: couponValue, couponId: couponId ?? "",)));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
@@ -124,9 +137,9 @@ class _CartScreenState extends State<CartScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   child: Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          "#A10PEM000542",
+                          couponId ?? "Select your coupon",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16,
@@ -135,7 +148,22 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          var price = totalPrice! + cartProvider.shippingFee! + ((totalPrice! * cartProvider.taxes!)/100);
+
+                          if(_useLoyalty) {
+
+                            if(price > cartProvider.loyaltyPoints!) {
+                              price = price - cartProvider.loyaltyPoints!;
+                            }
+                            else {
+                              price = 0;
+                            }
+                            
+                          }
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => CouponScreen(totalAmount: price,)));
+                        },
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           backgroundColor: Colors.black,
@@ -153,18 +181,22 @@ class _CartScreenState extends State<CartScreen> {
               const SizedBox(height: 20),
               _buildLoyaltyPointSection(cartProvider.loyaltyPoints!),
               const SizedBox(height: 20),
-              buildOrderInfo(totalPrice ?? 0,cartProvider.taxes ?? 0,cartProvider.shippingFee ?? 0, cartProvider.loyaltyPoints ?? 0)
+              buildOrderInfo(totalPrice ?? 0,cartProvider.taxes ?? 0,cartProvider.shippingFee ?? 0, cartProvider.loyaltyPoints ?? 0, couponValue ?? 0)
         ],
       ),
     );
   }
 
-  Widget buildOrderInfo(int subtotal, int taxes, int shippingFee, int loyaltyPoint) {
+  Widget buildOrderInfo(int subtotal, int taxes, int shippingFee, int loyaltyPoint, int coupon) {
     double totalAmount = subtotal + shippingFee + ((subtotal * taxes)/100) ;
 
     if (_useLoyalty) {
       totalAmount -= loyaltyPoint.toDouble();
       if (totalAmount < 0) totalAmount = 0; 
+    }
+
+    if(coupon > 0) {
+      totalAmount = totalAmount - ((totalAmount * coupon)/100);
     }
 
     return Container(
@@ -195,6 +227,11 @@ class _CartScreenState extends State<CartScreen> {
                 _buildInfoRow("Sub Total", subtotal),
                 _buildInfoRowPercent("Taxes", taxes),
                 _buildInfoRow("Shipping Fee", shippingFee),
+                if(_useLoyalty == true)
+                  _buildInfoRow("Loyalty Point", loyaltyPoint),
+                if(coupon > 0)
+                  _buildInfoRowPercent("Coupon Point", coupon)
+                
               ],
             ),
           ),

@@ -185,6 +185,14 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
                         Text("${_formatCurrency(widget.loyaltyPoint)} đ"),
                       ],
                     ),
+                  if(order.couponCode != "")
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Coupon"),  
+                        Text("${order.couponPoint} %"),
+                      ],
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

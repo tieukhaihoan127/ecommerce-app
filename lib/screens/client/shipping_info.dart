@@ -25,7 +25,11 @@ class ShippingInfoScreen extends StatefulWidget {
 
   final int loyaltyPoint;
 
-  const ShippingInfoScreen({super.key, required this.cartId, required this.totalPrice, required this.carts, required this.taxes, required this.shippingFee, required this.loyaltyPointUsed, required this.loyaltyPoint});
+  final int couponValue;
+
+  final String couponId;
+
+  const ShippingInfoScreen({super.key, required this.cartId, required this.totalPrice, required this.carts, required this.taxes, required this.shippingFee, required this.loyaltyPointUsed, required this.loyaltyPoint, required this.couponValue, required this.couponId});
 
   _ShippingInfoScreenState createState() => _ShippingInfoScreenState();
 }
@@ -411,7 +415,9 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
           ward: _selectedWardName,
           district: _selectedDistrictName,
           address: _addressController.text,
-          loyaltyPointUsed: widget.loyaltyPointUsed
+          loyaltyPointUsed: widget.loyaltyPointUsed,
+          couponPoint: widget.couponValue,
+          couponCode: widget.couponId
         );
 
         Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentSelectionScreen(order: order, totalPrice: widget.totalPrice, carts: widget.carts, taxes: widget.taxes, shippingFee: widget.shippingFee, loyaltyPoint: widget.loyaltyPoint,)));

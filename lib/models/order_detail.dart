@@ -12,6 +12,7 @@ class OrderDetailModel {
   int? taxes;
   int? shippingFee;
   int? loyaltyPoint;
+  int? coupon;
 
   OrderDetailModel({
     this.orderId,
@@ -20,7 +21,8 @@ class OrderDetailModel {
     this.userInfo,
     this.taxes,
     this.shippingFee,
-    this.loyaltyPoint
+    this.loyaltyPoint,
+    this.coupon
   });
 
   @override
@@ -37,6 +39,7 @@ class OrderDetailModel {
       taxes: json['taxes'] ?? 0,
       shippingFee: json['shippingFee'] ?? 0,
       loyaltyPoint: json['loyaltyPoint'] ?? 0,
+      coupon: json['couponPoint'] ?? 0
     );
   }
 

@@ -75,18 +75,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     .toList(),
                 const SizedBox(height: 16),
 
-                buildSectionTitle('Promo Code'),
-                const SizedBox(height: 8),
-                buildPromoCode(),
-                const SizedBox(height: 16),
+                // buildSectionTitle('Promo Code'),
+                // const SizedBox(height: 8),
+                // buildPromoCode(),
+                // const SizedBox(height: 16),
 
-                _buildLoyaltyPointSection(loyalty),
-                const SizedBox(height: 16,),
+                // _buildLoyaltyPointSection(loyalty),
+                // const SizedBox(height: 16,),
 
                 buildOrderInfo(
                   orderProvider.orderDetail?.totalPrice ?? 0,
                   orderProvider.orderDetail?.taxes ?? 0,
                   orderProvider.orderDetail?.shippingFee ?? 0,
+                  loyalty,
+                  orderProvider.orderDetail?.coupon ?? 0,
                   orderProvider
                 ),
 
@@ -220,7 +222,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   );
 }
 
-  Widget buildOrderInfo(double subtotal, int taxes, int shippingFee, OrderProvider orderProvider) {
+  Widget buildOrderInfo(double subtotal, int taxes, int shippingFee, int loyaltyPoint, int coupon, OrderProvider orderProvider) {
     double totalAmount = subtotal + shippingFee + ((subtotal * taxes) / 100);
 
     if(orderProvider.orderDetail!.loyaltyPoint! >= totalAmount) {
@@ -228,6 +230,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
     else {
       totalAmount = totalAmount - orderProvider.orderDetail!.loyaltyPoint!;
+    }
+
+    if(coupon > 0) {
+      totalAmount = totalAmount - ((totalAmount * coupon)/100);
     }
 
     return Container(
@@ -256,6 +262,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 _buildInfoRowDouble("Sub Total", subtotal),
                 _buildInfoRowPercent("Taxes", taxes),
                 _buildInfoRow("Shipping Fee", shippingFee),
+                if(loyaltyPoint > 0)
+                  _buildInfoRow("Loyalty Point", loyaltyPoint),
+                if(coupon > 0)
+                  _buildInfoRowPercent("Coupon", coupon),
               ],
             ),
           ),
