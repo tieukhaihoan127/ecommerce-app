@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/models/product_variant.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
+import 'package:ecommerce_app/providers/review_provider.dart';
 import 'package:ecommerce_app/widgets/app_bar_product.dart';
 import 'package:ecommerce_app/widgets/carousel_product.dart';
 import 'package:ecommerce_app/widgets/hex_color.dart';
@@ -23,13 +24,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   ProductVariant? productVariant;
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<ReviewProvider>(
+        context,
+        listen: false,
+      ).loadReviews(widget.productModel.id!);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     final cartProvider = Provider.of<CartProvider>(context);
+    final reviewProvider = Provider.of<ReviewProvider>(context);
+    final reviews = reviewProvider.review;
 
     return Scaffold(
       appBar: AppBarProductHelper(categoryName: "Laptop",), 
-      body: SingleChildScrollView(
+      body: reviewProvider.isLoading ? Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) : SingleChildScrollView(
         child: Column(
           children: [
             CarouselProduct(imagePaths: productVariant?.carousel ??  widget.productModel.images!),
@@ -209,37 +223,66 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("156 Reviews", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                Text("View All", style: TextStyle(color: Colors.grey[600])),
-                              ],
-                            ),
-                            SizedBox(height: 12),
-                            _reviewCard(
-                              imageUrl: 'https://i.pravatar.cc/100?img=1',
-                              name: 'Smith Williams',
-                              time: 'Just Now',
-                              rating: 4.5,
-                              comment: 'I adore this item. Just fantastic!! they create the actual as seen in the picture !!',
-                            ),
-                            _reviewCard(
-                              imageUrl: 'https://i.pravatar.cc/100?img=2',
-                              name: 'Rina Jones',
-                              time: '1 min ago',
-                              rating: 4.2,
-                              comment: 'The best product quality.! Its amazing, Love it...!!',
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     Text("156 Reviews", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            //     Text("View All", style: TextStyle(color: Colors.grey[600])),
+                            //   ],
+                            // ),
+                            // SizedBox(height: 12),
+                            ...reviews!.map((item) => _reviewCard(time: item.createdDate!, comment: item.message!)).toList(),
                         
                             SizedBox(height: 8),
                         
-                            Text(
-                              "+ Write Your Review",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    TextEditingController _reviewController = TextEditingController();
+
+                                    return AlertDialog(
+                                      title: Text("Write Your Review"),
+                                      content: TextField(
+                                        controller: _reviewController,
+                                        maxLines: 4,
+                                        decoration: InputDecoration(
+                                          hintText: "Enter your comment here",
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            String review = _reviewController.text;
+                                            print(review);
+                                            if (review.isNotEmpty) {
+                                              final message = await reviewProvider.addReview(widget.productModel.id!, review);
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text(message)),
+                                              );
+                                            }
+                                          },
+                                          child: Text("Submit"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                "+ Write Your Review",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                         
@@ -367,10 +410,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 }
 
 Widget _reviewCard({
-  required String imageUrl,
-  required String name,
-  required String time,
-  required double rating,
+  required DateTime time,
   required String comment,
 }) {
   return Container(
@@ -385,30 +425,14 @@ Widget _reviewCard({
       children: [
         Row(
           children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage(imageUrl),
-            ),
-            SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(time, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  Text("Date: ${time.toLocal().toShortString()}", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                 ],
               ),
             ),
-            Row(
-              children: [
-                Icon(Icons.star, color: Colors.amber, size: 18),
-                SizedBox(width: 4),
-                Text(
-                  rating.toString(),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            )
           ],
         ),
         SizedBox(height: 8),
@@ -421,4 +445,10 @@ Widget _reviewCard({
 String _formatCurrency(double price) {
   final NumberFormat formatter = NumberFormat("#,##0", "vi_VN");
   return formatter.format(price);
+}
+
+extension DateFormatExtension on DateTime {
+  String toShortString() {
+    return '${this.day}/${this.month}/${this.year} - ${this.hour}:${this.minute}';
+  }
 }
