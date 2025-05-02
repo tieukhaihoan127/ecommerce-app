@@ -23,6 +23,7 @@ class ReviewProvider with ChangeNotifier{
 
   Future<void> loadReviews(String productId) async {
     _isLoading = true;
+    _review = [];
     notifyListeners();
 
     try { 

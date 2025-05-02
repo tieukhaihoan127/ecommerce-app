@@ -1,7 +1,9 @@
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/models/product_variant.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
+import 'package:ecommerce_app/providers/rating_provider.dart';
 import 'package:ecommerce_app/providers/review_provider.dart';
+import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/widgets/app_bar_product.dart';
 import 'package:ecommerce_app/widgets/carousel_product.dart';
 import 'package:ecommerce_app/widgets/hex_color.dart';
@@ -22,6 +24,7 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int quantity = 1;
   ProductVariant? productVariant;
+  
 
   @override
   void initState() {
@@ -31,6 +34,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         context,
         listen: false,
       ).loadReviews(widget.productModel.id!);
+
+      Provider.of<RatingProvider>(context, listen: false).loadRatings(widget.productModel.id!);
     });
   }
 
@@ -39,14 +44,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     final cartProvider = Provider.of<CartProvider>(context);
     final reviewProvider = Provider.of<ReviewProvider>(context);
+    final ratingProvider = Provider.of<RatingProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+
+    final ratings = ratingProvider.rating;
     final reviews = reviewProvider.review;
 
     return Scaffold(
       appBar: AppBarProductHelper(categoryName: "Laptop",), 
-      body: reviewProvider.isLoading ? Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) : SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            CarouselProduct(imagePaths: productVariant?.carousel ??  widget.productModel.images!),
+            CarouselProduct(key: ValueKey(productVariant?.carousel ?? widget.productModel.images),imagePaths: (productVariant != null && productVariant!.carousel != null && productVariant!.carousel!.isNotEmpty)
+    ? productVariant!.carousel!
+    : (widget.productModel.images ?? []),),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -94,6 +105,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             setState(() {
                               productVariant = item;
                               quantity = 1;
+                              print("Product Variant: $productVariant");
                             });
                           }
                         );
@@ -210,88 +222,190 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ],
                     ),
                   ),
-                  ExpansionTileTheme(
-                    data: ExpansionTileTheme.of(context).copyWith(
-                      shape: Border(),
-                      collapsedShape: Border()
-                    ),
-                    child: ExpansionTile(
-                      tilePadding: EdgeInsets.zero,
-                      initiallyExpanded: true,
-                      title: Text("Reviews", style: TextStyle(fontWeight: FontWeight.w500)),
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: [
-                            //     Text("156 Reviews", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            //     Text("View All", style: TextStyle(color: Colors.grey[600])),
-                            //   ],
-                            // ),
-                            // SizedBox(height: 12),
-                            ...reviews!.map((item) => _reviewCard(time: item.createdDate!, comment: item.message!)).toList(),
-                        
-                            SizedBox(height: 8),
-                        
-                            GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    TextEditingController _reviewController = TextEditingController();
+                  if(reviewProvider.isLoading)
+                    Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) 
+                  else
+                    ExpansionTileTheme(
+                      data: ExpansionTileTheme.of(context).copyWith(
+                        shape: Border(),
+                        collapsedShape: Border()
+                      ),
+                      child: ExpansionTile(
+                        tilePadding: EdgeInsets.zero,
+                        initiallyExpanded: true,
+                        title: Text("Reviews", style: TextStyle(fontWeight: FontWeight.w500)),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...reviews!.map((item) => _reviewCard(time: item.createdDate!, comment: item.message!)).toList(),
+                          
+                              SizedBox(height: 8),
+                          
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      TextEditingController _reviewController = TextEditingController();
 
-                                    return AlertDialog(
-                                      title: Text("Write Your Review"),
-                                      content: TextField(
-                                        controller: _reviewController,
-                                        maxLines: 4,
-                                        decoration: InputDecoration(
-                                          hintText: "Enter your comment here",
-                                          border: OutlineInputBorder(),
+                                      return AlertDialog(
+                                        title: Text("Write Your Review"),
+                                        content: TextField(
+                                          controller: _reviewController,
+                                          maxLines: 4,
+                                          decoration: InputDecoration(
+                                            hintText: "Enter your comment here",
+                                            border: OutlineInputBorder(),
+                                          ),
                                         ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () => Navigator.pop(context),
-                                          child: Text("Cancel"),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            String review = _reviewController.text;
-                                            print(review);
-                                            if (review.isNotEmpty) {
-                                              final message = await reviewProvider.addReview(widget.productModel.id!, review);
-                                              Navigator.pop(context);
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text(message)),
-                                              );
-                                            }
-                                          },
-                                          child: Text("Submit"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                              child: Text(
-                                "+ Write Your Review",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 15,
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              String review = _reviewController.text;
+                                              print(review);
+                                              if (review.isNotEmpty) {
+                                                final message = await reviewProvider.addReview(widget.productModel.id!, review);
+                                                Navigator.pop(context);
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(content: Text(message)),
+                                                );
+                                              }
+                                            },
+                                            child: Text("Submit"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Text(
+                                  "+ Write Your Review",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                  ),
                                 ),
                               ),
-                            ),
-                        
-                            SizedBox(height: 12),
-                          ],
-                        ),
-                      ],
+                          
+                              SizedBox(height: 12),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  )
+                  if(ratingProvider.isLoading)
+                    Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) 
+                  else 
+                    ExpansionTileTheme(
+                      data: ExpansionTileTheme.of(context).copyWith(
+                        shape: Border(),
+                        collapsedShape: Border()
+                      ),
+                      child: ExpansionTile(
+                        tilePadding: EdgeInsets.zero,
+                        initiallyExpanded: true,
+                        title: Text("Ratings", style: TextStyle(fontWeight: FontWeight.w500)),
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+
+                              ...ratings!.map((item) => _ratingCard(imageUrl: item.imageUrl!,time: item.createdDate!, rating: item.rating!, comment: item.message!, name: item.name!)).toList(),
+                          
+                              SizedBox(height: 8),
+                          
+                              if(userProvider.user != null)
+                                GestureDetector(
+                                  onTap: () {
+                                    double _currentRating = 5.0;
+                                    TextEditingController _commentController = TextEditingController();
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return StatefulBuilder(
+                                          builder: (context, setState) {
+                                            return AlertDialog(
+                                              title: Text("Write Your Rating"),
+                                              content: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text("Your Rating: ${_currentRating.toStringAsFixed(1)}"),
+                                                      Icon(Icons.star, color: Colors.amber)
+                                                    ],
+                                                  ),
+                                                  Slider(
+                                                    value: _currentRating,
+                                                    min: 0,
+                                                    max: 5,
+                                                    divisions: 10,
+                                                    label: _currentRating.toStringAsFixed(1),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _currentRating = value;
+                                                      });
+                                                    },
+                                                  ),
+                                                  TextField(
+                                                    controller: _commentController,
+                                                    maxLines: 3,
+                                                    decoration: InputDecoration(
+                                                      hintText: "Enter your comment",
+                                                      border: OutlineInputBorder(),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context),
+                                                  child: Text("Cancel"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    String comment = _commentController.text;
+                                                    if (comment.isNotEmpty) {
+                                                      final message = await ratingProvider.addRating(widget.productModel.id!, comment, _currentRating);
+                                                      Navigator.pop(context);
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        SnackBar(content: Text(message)),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: Text("Submit"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text(
+                                    "+ Write Your Rating",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                          
+                              SizedBox(height: 12),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
                 ],
               ),
             ),
@@ -433,6 +547,58 @@ Widget _reviewCard({
                 ],
               ),
             ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Text(comment, style: TextStyle(color: Colors.black)),
+      ],
+    ),
+  );
+}
+
+Widget _ratingCard({
+  required String imageUrl,
+  required String name,
+  required DateTime time,
+  required double rating,
+  required String comment,
+}) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 12),
+    padding: EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade100,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            CircleAvatar(
+               radius: 20,
+               backgroundImage: imageUrl != "" ? NetworkImage(imageUrl) : NetworkImage("https://cdn-icons-png.flaticon.com/512/6596/6596121.png"),
+             ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text("Date: ${time.toLocal().toShortString()}", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                ],
+              ),
+            ),
+             Row(
+               children: [
+                 Icon(Icons.star, color: Colors.amber, size: 18),
+                 SizedBox(width: 4),
+                 Text(
+                   rating.toString(),
+                   style: TextStyle(fontWeight: FontWeight.bold),
+                 ),
+               ],
+             )
           ],
         ),
         SizedBox(height: 8),
