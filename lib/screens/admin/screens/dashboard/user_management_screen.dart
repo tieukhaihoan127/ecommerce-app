@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-
 import '../../constants.dart';
 import '../../responsive.dart';
 import 'components/header.dart';
 
-import 'components/my_fields.dart';
-import 'components/recent_files.dart';
 
-class DashboardScreen extends StatelessWidget {
+class UserManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,9 +22,6 @@ class DashboardScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      MyFiles(),
-                      SizedBox(height: defaultPadding),
-                      RecentFiles(),
                       if (Responsive.isMobile(context))
                         SizedBox(height: defaultPadding),
                     ],
@@ -38,6 +32,7 @@ class DashboardScreen extends StatelessWidget {
                 // On Mobile means if the screen is less than 850 we don't want to show it
               ],
             )
+
           ],
         ),
       ),

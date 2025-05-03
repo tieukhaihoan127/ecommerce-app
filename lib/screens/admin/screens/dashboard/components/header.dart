@@ -7,13 +7,33 @@ import '../../../constants.dart';
 import '../../../controllers/menu_app_controller.dart';
 import '../../../responsive.dart';
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
   const Header({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
+  @override
   Widget build(BuildContext context) {
+    final selectedPage = context.watch<MenuAppController>().selectedPage;
+    var title = "Quản lý";
+    if (selectedPage == AppPage.revenue) {
+      title += " doanh thu";
+    } else if (selectedPage == AppPage.invoice) {
+      title += " hóa đơn";
+    } else if (selectedPage == AppPage.product) {
+      title += " sản phẩm";
+    } else if (selectedPage == AppPage.user) {
+      title += " tài khoản người dùng";
+    } else if (selectedPage == AppPage.coupon) {
+      title += " Coupon";
+    }
+
+
     return Row(
       children: [
         if (!Responsive.isDesktop(context))
@@ -23,7 +43,7 @@ class Header extends StatelessWidget {
           ),
         if (!Responsive.isMobile(context))
           Text(
-            "Quản lý sản phẩm",
+            title,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         if (!Responsive.isMobile(context))

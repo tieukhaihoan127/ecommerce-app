@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+
+import '../../../controllers/menu_app_controller.dart';
+import '../../../responsive.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({
@@ -17,32 +22,54 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: "Quản lý chung",
             svgSrc: "assets/icons/menu_dashboard.svg",
-            press: () {},
+            press: () {
+              context.read<MenuAppController>().changePage(AppPage.dashboard);
+            },
           ),
           DrawerListTile(
             title: "Doanh thu",
             svgSrc: "assets/icons/menu_tran.svg",
-            press: () {},
+            press: () {
+              context.read<MenuAppController>().changePage(AppPage.revenue);
+              if (Responsive.isMobile(context))
+                Navigator.pop(context); // Đóng drawer
+            },
           ),
           DrawerListTile(
             title: "Hóa đơn",
             svgSrc: "assets/icons/menu_doc.svg",
-            press: () {},
+            press: () {
+              context.read<MenuAppController>().changePage(AppPage.invoice);
+              if (Responsive.isMobile(context))
+                Navigator.pop(context); // Đóng drawer
+            },
           ),
           DrawerListTile(
             title: "Quản lý sản phẩm",
             svgSrc: "assets/icons/menu_store.svg",
-            press: () {},
+            press: () {
+              context.read<MenuAppController>().changePage(AppPage.product);
+              if (Responsive.isMobile(context))
+                Navigator.pop(context); // Đóng drawer
+            },
           ),
           DrawerListTile(
-            title: "Profile",
+            title: "Quản lý tài khoản người dùng",
             svgSrc: "assets/icons/menu_profile.svg",
-            press: () {},
+            press: () {
+              context.read<MenuAppController>().changePage(AppPage.user);
+              if (Responsive.isMobile(context))
+                Navigator.pop(context); // Đóng drawer
+            },
           ),
           DrawerListTile(
-            title: "Cài đặt",
+            title: "Quản lý Coupon",
             svgSrc: "assets/icons/menu_setting.svg",
-            press: () {},
+            press: () {
+              context.read<MenuAppController>().changePage(AppPage.coupon);
+              if (Responsive.isMobile(context))
+                Navigator.pop(context); // Đóng drawer
+            },
           ),
         ],
       ),
