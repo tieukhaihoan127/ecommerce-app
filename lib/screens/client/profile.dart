@@ -3,7 +3,9 @@ import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
 import 'package:ecommerce_app/screens/client/change_password.dart';
 import 'package:ecommerce_app/screens/client/change_user_information.dart';
+import 'package:ecommerce_app/screens/client/not_logged_in.dart';
 import 'package:ecommerce_app/screens/client/signin.dart';
+import 'package:ecommerce_app/widgets/app_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,7 +72,8 @@ class Profile extends StatelessWidget{
     final userProvider = Provider.of<UserProvider>(context);
     
     return Scaffold(
-      body: SingleChildScrollView(
+      appBar: AppBarHelper(userId: userProvider.user?.id ?? "", title: "My Profile"),
+      body: userProvider.user?.id == null ? NotLoggedInPage() : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsetsDirectional.symmetric(
             horizontal: 20,
@@ -78,10 +81,6 @@ class Profile extends StatelessWidget{
           ),
           child: Column(
             children: [
-              Center(
-                child: _headerProfile(context),
-              ),
-              const SizedBox(height: 10,),
               Center(
                 child: _profileInfo(context,userProvider.user?.imageUrl, userProvider.user?.fullName, userProvider.user?.email),
               ),

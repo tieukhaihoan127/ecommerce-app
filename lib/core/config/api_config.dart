@@ -1,6 +1,6 @@
 class ApiConfig {
 
-  static const String baseUrl = 'http://192.168.1.4:3030/';
+  static const String baseUrl = 'http://192.168.1.14:3030/';
   static const String getUserUrl = '${baseUrl}users/signin';
   static const String registerUrl = '${baseUrl}users/register';
   static const String addressUrl = 'https://vn-public-apis.fpo.vn/';
@@ -28,5 +28,6 @@ class ApiConfig {
   static const String addReviewUrl = '${baseUrl}review/add';
   static const String getRatingUrl = '${baseUrl}rating/';
   static const String addRatingUrl = '${baseUrl}rating/add';
+  static const String chatUrl = '${baseUrl}chat/';
   
 }

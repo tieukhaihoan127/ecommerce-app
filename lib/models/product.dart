@@ -15,6 +15,7 @@ class ProductModel {
   String? thumbnail;
   List<String>? images;
   List<ProductVariant>? variant;
+  double? averageRating;
 
 
 
@@ -30,7 +31,8 @@ class ProductModel {
     this.stock,
     this.thumbnail,
     this.images,
-    this.variant
+    this.variant,
+    this.averageRating
   });
 
   @override
@@ -52,6 +54,7 @@ class ProductModel {
       thumbnail: json['thumbnail'] ?? '',
       images: List<String>.from(json['images']) ?? [],
       variant: (json['variant'] as List?)?.map((item) => ProductVariant.fromJson(item)).toList() ?? [],
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
     );
   }
 

@@ -1,5 +1,9 @@
 import 'package:ecommerce_app/providers/order_provider.dart';
+import 'package:ecommerce_app/providers/user_provider.dart';
+import 'package:ecommerce_app/screens/client/not_logged_in.dart';
 import 'package:ecommerce_app/screens/client/order_detail.dart';
+import 'package:ecommerce_app/widgets/app_bar_category.dart';
+import 'package:ecommerce_app/widgets/app_bar_helper.dart';
 import 'package:ecommerce_app/widgets/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,17 +22,12 @@ class _OrderHistoryPageScreenState extends State<OrderHistoryPageScreen> {
   Widget build(BuildContext context) {
 
     final orderProvider = Provider.of<OrderProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
     final orderItems = orderProvider.historyOrders;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Order', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        leading: BackButton(color: Colors.black),
-      ),
-      body: orderProvider.isLoading ?  Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) : orderItems!.isEmpty ? const Center(child: Text('Your order is empty')) : ListView.builder(
+      appBar: AppBarHelper(userId: userProvider.user?.id ?? "", title: "My Order",),
+      body: userProvider.user?.id == null ? NotLoggedInPage() : orderProvider.isLoading ?  Center(child: const SizedBox( width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2),)) : orderItems!.isEmpty ? const Center(child: Text('Your order is empty')) : ListView.builder(
         itemCount: orderItems.length,
         itemBuilder: (context, index) {
           final order = orderItems[index];

@@ -111,16 +111,17 @@ class ProductItem extends StatelessWidget{
                       ),
                     ],
                   ),
-                  Row(
-                    children: const [
-                      Icon(Icons.star, color: Colors.amber, size: 16),
-                      SizedBox(width: 4),
-                      Text(
-                        '4.5',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  )
+                  if(product.averageRating! > 0)
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber, size: 16),
+                        SizedBox(width: 4),
+                        Text(
+                          product.averageRating.toString(),
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    )
                 ],
               ),
             ],

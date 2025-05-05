@@ -2,8 +2,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/providers/coupon_provider.dart';
+import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/coupon_page.dart';
 import 'package:ecommerce_app/screens/client/shipping_info.dart';
+import 'package:ecommerce_app/widgets/app_bar_helper.dart';
 import 'package:ecommerce_app/widgets/cart_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,22 +28,15 @@ class _CartScreenState extends State<CartScreen> {
 
     final cartProvider = Provider.of<CartProvider>(context);
     final couponProvider = Provider.of<CouponProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
 
     final cartItems = cartProvider.carts;
     final totalPrice = cartProvider.totalPrice;
     final couponId = couponProvider.code;
     final couponValue = couponProvider.value;
 
-    print("Coupon Value: $couponValue");
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Cart', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        leading: BackButton(color: Colors.black),
-      ),
+      appBar: AppBarHelper(userId: userProvider.user?.id ?? "", title: "My Cart"),
       bottomNavigationBar: cartItems.isEmpty ? 
       null : 
       Container(

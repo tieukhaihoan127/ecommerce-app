@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/providers/category_provider.dart';
+import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/product_page.dart';
 import 'package:ecommerce_app/widgets/app_bar_category.dart';
 import 'package:ecommerce_app/widgets/category_card.dart';
@@ -25,16 +26,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final categoryProvider = Provider.of<CategoryProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
-      appBar: AppBarCategoryHelper(),
+      appBar: AppBarCategoryHelper(userId: userProvider.user?.id ?? "",),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SearchBarWidget(),
-            const SizedBox(height: 16),
-            
+          
             if (categoryProvider.isLoading)
               const Center(child: CircularProgressIndicator())
             else if (categoryProvider.categoryPages.isEmpty)
