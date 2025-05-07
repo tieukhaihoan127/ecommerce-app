@@ -17,7 +17,7 @@ class SideMenu extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-            child: Image.asset("assets/images/logo.png"),
+            child: Image.asset("assets/images/GearHouse.png"),
           ),
           DrawerListTile(
             title: "Quản lý chung",
@@ -96,12 +96,12 @@ class DrawerListTile extends StatelessWidget {
       horizontalTitleGap: 0.0,
       leading: SvgPicture.asset(
         svgSrc,
-        colorFilter: ColorFilter.mode(Colors.white54, BlendMode.srcIn),
-        height: 16,
+        colorFilter: ColorFilter.mode(Colors.orange, BlendMode.srcIn),
+        height: 20,
       ),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white54),
+        style: TextStyle(color: Colors.white),
       ),
     );
   }

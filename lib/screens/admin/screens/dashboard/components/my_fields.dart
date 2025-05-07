@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../models/my_files.dart';
 import '../../../responsive.dart';
+import 'add_product_dialog.dart';
 import 'file_info_card.dart';
 
 class MyFiles extends StatelessWidget {
@@ -31,7 +32,10 @@ class MyFiles extends StatelessWidget {
                       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => AddProductDialog(),
+              ),
               icon: Icon(Icons.add),
               label: Text("Thêm sản phẩm mới"),
             ),
