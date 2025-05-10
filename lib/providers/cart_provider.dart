@@ -15,9 +15,9 @@ class CartProvider with ChangeNotifier{
 
   List<CartModel> get carts => _carts;
 
-  int? _totalPrice;
+  int _totalPrice = 0;
 
-  int? get totalPrice => _totalPrice;
+  int get totalPrice => _totalPrice;
 
   int? _taxes;
 
@@ -64,16 +64,19 @@ class CartProvider with ChangeNotifier{
       if(cartResponse['products'] == null || (cartResponse['products'] as List).isEmpty) {
         _carts = [];
         _totalPrice = 0;
+        print("Cart Response: $cartResponse");
       }
       else {
         final productsJson = cartResponse['products'] as List;
         _carts = productsJson.map<CartModel>((item) => CartModel.fromJson(item)).toList();
+        print("Cart Response Data: $_carts");
         _totalPrice = cartResponse['totalPrice'];
         _taxes = cartResponse['taxes'];
         _shippingFee = cartResponse['shippingFee'];
         _cartId = cartResponse['cartId'];
         _loyaltyPoints = cartResponse['loyaltyPoint'];
       }
+
 
       
       _errorMessage = "";

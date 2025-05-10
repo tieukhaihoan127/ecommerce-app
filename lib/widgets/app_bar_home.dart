@@ -1,73 +1,131 @@
+import 'package:ecommerce_app/providers/user_provider.dart';
+import 'package:ecommerce_app/screens/admin/main_screen.dart';
+import 'package:ecommerce_app/screens/client/chat.dart';
+import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class AppBarHome extends StatelessWidget implements PreferredSizeWidget {
-
+class AppBarHome extends StatefulWidget implements PreferredSizeWidget {
   const AppBarHome({super.key});
 
   @override
+  State<AppBarHome> createState() => _AppBarHomeState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _AppBarHomeState extends State<AppBarHome> {
+  @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return AppBar(
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
       elevation: 0,
       title: Row(
         children: [
-
-          Builder(
-            builder: (context) => IconButton.outlined(
-              icon: Icon(Icons.menu, color: Colors.black),
-              onPressed: () {
-                Scaffold.of(context).openDrawer(); 
-              },
+          if (userProvider.user?.id != null) ...[
+            CircleAvatar(
+              backgroundImage: NetworkImage(
+                userProvider.user?.imageUrl ??
+                    'https://cdn-icons-png.flaticon.com/512/6596/6596121.png',
+              ),
+              radius: 20,
             ),
-          ),
-
-          SizedBox(width: 5),
-
-          CircleAvatar(
-            backgroundImage: NetworkImage('https://res.cloudinary.com/dwdhkwu0r/image/upload/v1742743354/public/lafrmfp3o9jdgbl4csnb.jpg'),
-            radius: 20,
-          ),
-
-          SizedBox(width: 10),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Hello",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              Text(
-                "Agasya!",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ],
-          ),
-
-          Spacer(),
-
-          Stack(
-            children: [
-              IconButton.outlined(
-                icon: Icon(Icons.notifications, color: Colors.black),
-                onPressed: () {},
-              ),
-              Positioned(
-                right: 10,
-                top: 10,
-                child: CircleAvatar(
-                  backgroundColor: Colors.red,
-                  radius: 5,
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Hello',
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  '${userProvider.user?.fullName ?? ''}!',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ] else ...[
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1745476257/public/jgp12jpbwqtio5lie00k.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+          const Spacer(),
         ],
       ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: userProvider.user?.id != null
+              ? (userProvider.user?.isAdmin == true
+                  ? IconButton.outlined(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>  MainScreen()),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.admin_panel_settings,
+                        color: Colors.black,
+                      ),
+                    )
+                  : IconButton.outlined(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ChatPage(userId: userProvider.user?.id ?? '')),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.mail,
+                        color: Colors.black,
+                      ),
+                    ))
+              : TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const Signin(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Đăng nhập',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+        ),
+      ],
     );
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

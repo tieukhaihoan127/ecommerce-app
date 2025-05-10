@@ -1,5 +1,4 @@
 import 'package:dotted_border/dotted_border.dart';
-import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/providers/coupon_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
@@ -10,7 +9,6 @@ import 'package:ecommerce_app/widgets/cart_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -35,8 +33,23 @@ class _CartScreenState extends State<CartScreen> {
     final couponId = couponProvider.code;
     final couponValue = couponProvider.value;
 
+    double totalAmount = 0.0;
+
+    if(totalPrice != null && cartProvider.shippingFee != null && cartProvider.taxes != null) {
+      totalAmount = totalPrice! + cartProvider.shippingFee! + ((totalPrice * cartProvider.taxes!) / 100);
+
+      if (_useLoyalty) {
+        totalAmount -= cartProvider.loyaltyPoints!.toDouble();
+        if (totalAmount < 0) totalAmount = 0;
+      }
+
+      if (couponValue! > 0) {
+        totalAmount = totalAmount - couponValue;
+      }
+    }
+
     return Scaffold(
-      appBar: AppBarHelper(userId: userProvider.user?.id ?? "", title: "My Cart"),
+      appBar: AppBarHelper(title: "My Cart"),
       bottomNavigationBar: cartItems.isEmpty ? 
       null : 
       Container(
@@ -48,8 +61,9 @@ class _CartScreenState extends State<CartScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+
             Text(
-              "Total price\n${_formatCurrencyDouble(totalPrice! + cartProvider.shippingFee! + ((totalPrice! * cartProvider.taxes!)/100))} đ",
+              "Total price\n${_formatCurrencyDouble(totalAmount)} đ",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             ElevatedButton(
@@ -68,7 +82,7 @@ class _CartScreenState extends State<CartScreen> {
                 }
 
                 if(couponValue! > 0) {
-                  price = price - ((price * couponValue)/100);
+                  price = price - couponValue;
                 }
 
                 Navigator.push(context, MaterialPageRoute(builder: (_) => ShippingInfoScreen(cartId: cartProvider.cartId!, totalPrice: price, carts: cartProvider.carts, taxes: cartProvider.taxes!, shippingFee: cartProvider.shippingFee!, loyaltyPointUsed: _useLoyalty, loyaltyPoint: cartProvider.loyaltyPoints!, couponValue: couponValue, couponId: couponId ?? "",)));
@@ -134,7 +148,7 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          couponId ?? "Select your coupon",
+                          couponId! != "" ? couponId : "Select your coupon",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16,
@@ -191,11 +205,10 @@ class _CartScreenState extends State<CartScreen> {
     }
 
     if(coupon > 0) {
-      totalAmount = totalAmount - ((totalAmount * coupon)/100);
+      totalAmount = totalAmount - coupon;
     }
 
     return Container(
-      // margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -225,7 +238,7 @@ class _CartScreenState extends State<CartScreen> {
                 if(_useLoyalty == true)
                   _buildInfoRow("Loyalty Point", loyaltyPoint),
                 if(coupon > 0)
-                  _buildInfoRowPercent("Coupon Point", coupon)
+                  _buildInfoRow("Coupon Point", coupon)
                 
               ],
             ),

@@ -25,6 +25,8 @@ class CategoryProvider with ChangeNotifier{
 
   List<CategoryPageModel> get categoryPages => _categoryPages;
 
+  int selectedCategoryIndex = 0;
+
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;    
@@ -88,6 +90,11 @@ class CategoryProvider with ChangeNotifier{
   void getStatus(BuildContext context, CategoryModel category) {
     _status = category.id;
     _name = category.name;
+    notifyListeners();
+  }
+
+  void setSelectedCategoryIndex(int index) {
+    selectedCategoryIndex = index;
     notifyListeners();
   }
 

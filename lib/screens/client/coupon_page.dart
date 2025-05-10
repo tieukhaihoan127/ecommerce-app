@@ -44,8 +44,8 @@ class _CouponScreenState extends State<CouponScreen> {
           return CouponCard(
             discount: coupon.discount!,
             code: coupon.code!,
-            description: coupon.description!,
             totalAmount: widget.totalAmount,
+            stock: coupon.stock!,
           );
         },
       ),

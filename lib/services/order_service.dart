@@ -109,4 +109,21 @@ class OrderService {
     } 
   }
 
+  Future<List<Map<String,dynamic>>> getOrderUsingCoupon(String couponId) async{
+    try {
+      Response response = await _dio.get("${ApiConfig.getCouponCodeAdminUrl}/$couponId");
+      if(response.statusCode == 200 && response.data["order"] != null){
+        List orders = response.data["order"];
+        return orders.map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e)).toList();
+      }
+      else {
+        return await Future.error("Lỗi hệ thống, không lấy được data!");
+      }
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
+    } 
+  }
+
 }

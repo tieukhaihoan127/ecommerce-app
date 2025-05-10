@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/providers/coupon_provider.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,10 +9,10 @@ class CouponCard extends StatelessWidget {
 
   final int discount;
   final String code;
-  final String description;
   final double totalAmount;
-  
-  const CouponCard({super.key, required this.discount, required this.code, required this.description, required this.totalAmount});
+  final int stock;
+
+  const CouponCard({super.key, required this.discount, required this.code, required this.totalAmount, required this.stock});
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +45,14 @@ class CouponCard extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '$discount%',
+                        text: _formatCurrency(discount),
                         style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                           color: Colors.white,
                         ),
                       ),
                       TextSpan(
-                        text: ' OFF',
+                        text: ' VND',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white70,
@@ -75,7 +75,7 @@ class CouponCard extends StatelessWidget {
                   children: [
                     const SizedBox(height: 4),
                     Text(
-                      description,
+                      code,
                       style: TextStyle(fontSize: 14, color: Colors.black54),
                     ),
                     const Spacer(),
@@ -83,7 +83,7 @@ class CouponCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '#$code',
+                          'Stock: $stock',
                           style: TextStyle(fontSize: 14, color: Colors.black87),
                         ),
                         GestureDetector(
@@ -91,9 +91,7 @@ class CouponCard extends StatelessWidget {
 
                             final prefs = await SharedPreferences.getInstance();
 
-                            var discountAmount = (totalAmount * discount) / 100 ;
-
-                            if(discountAmount > totalAmount) {
+                            if(discount > totalAmount) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text("Mã coupon không hợp lệ!")),
                               );
@@ -157,4 +155,9 @@ class TicketShapeClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+String _formatCurrency(int price) {
+  final NumberFormat formatter = NumberFormat("#,##0", "vi_VN");
+  return formatter.format(price);
 }

@@ -1,9 +1,7 @@
 import 'package:ecommerce_app/providers/category_provider.dart';
-import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/product_page.dart';
 import 'package:ecommerce_app/widgets/app_bar_category.dart';
 import 'package:ecommerce_app/widgets/category_card.dart';
-import 'package:ecommerce_app/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,10 +24,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final categoryProvider = Provider.of<CategoryProvider>(context);
-    final userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
-      appBar: AppBarCategoryHelper(userId: userProvider.user?.id ?? "",),
+      appBar: AppBarCategoryHelper(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -48,7 +45,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => ProductPageScreen(categoryId: categoryProvider.categoryPages[index].id, categoryName: categoryProvider.categoryPages[index].name)));
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => ProductPageScreen(categoryId: categoryProvider.categoryPages[index].id)));
                           },
                           child: CategoryCard(
                             name: categoryProvider.categoryPages[index].name!,

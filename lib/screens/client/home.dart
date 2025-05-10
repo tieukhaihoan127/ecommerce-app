@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/models/product.dart';
 import 'package:ecommerce_app/providers/category_provider.dart';
 import 'package:ecommerce_app/providers/product_provider.dart';
+import 'package:ecommerce_app/screens/client/product_page.dart';
 import 'package:ecommerce_app/widgets/app_bar_home.dart';
 import 'package:ecommerce_app/widgets/carousel.dart';
 import 'package:ecommerce_app/widgets/category_selector.dart';
@@ -45,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           List<Future> futures = [];
           for (var category in categoryProvider.categories) {
-            if (!productProvider.productsByCategory.containsKey(category.id)) {
+            if (!productProvider.productsHomeByCategory.containsKey(category.id)) {
               futures.add(productProvider.getAllProducts(category.id));
             }
           }
@@ -72,30 +73,18 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchBarWidget(),
-              SizedBox(height: 20),
+              SizedBox(height: 4),
               Carousel(imagePaths: imagePaths),
               SizedBox(height: 20),
               CategorySelector(),
               SizedBox(height: 20),
-              ...categoryProvider.categories.map((category){
-                List<ProductModel> productsForCategory = productProvider.productsByCategory[category.id] ?? [];
+              ...categoryProvider.categories.skip(1).map((category){
+                List<ProductModel> productsForCategory = productProvider.productsHomeByCategory[category.id] ?? [];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Categories(text: category.name),
+                    Categories(text: category.name, categoryId: category.id,),
                     SizedBox(height: 10),
-                    // Consumer<ProductProvider>(
-                    //   builder: (context, productProvider, child) {
-                    //     if (productProvider.isLoading) {
-                    //       return Center(child: CircularProgressIndicator());
-                    //     } 
-                    //     if (productProvider.products.isEmpty) {
-                    //       return Center(child: Text("Không có sản phẩm nào 😢"));
-                    //     }
-                    //     return ProductGrid(products: productProvider.products);
-                    //   },
-                    // ),
                     if (productsForCategory.isEmpty && productProvider.isLoading) 
                       Center(child: CircularProgressIndicator())
                     else if (productsForCategory.isEmpty)
@@ -120,14 +109,16 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Categories(text: categoryProvider.name),
+                  Categories(text: categoryProvider.name, categoryId: categoryProvider.status,),
                   SizedBox(height: 10),
-                  if ((productProvider.productsByCategory[categoryProvider.status] ?? []).isEmpty && productProvider.isLoading) 
+                  if ((productProvider.productsHomeByCategory[categoryProvider.status] ?? []).isEmpty && productProvider.isLoading) 
                       Center(child: CircularProgressIndicator())
-                    else if ((productProvider.productsByCategory[categoryProvider.status] ?? []).isEmpty)
+                    else if ((productProvider.productsHomeByCategory[categoryProvider.status] ?? []).isEmpty)
                       Center(child: Text("Không có sản phẩm nào 😢"))
-                    else
-                      ProductGrid(products: (productProvider.productsByCategory[categoryProvider.status] ?? [])),
+                    else...[
+                      ProductGrid(products: (productProvider.productsHomeByCategory[categoryProvider.status] ?? [])),
+                    ],
+                    
                     SizedBox(height: 20),
                 ],
               ),
@@ -139,33 +130,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
-// class CategorySelector extends StatelessWidget {
-//   final List<String> categories = ['All', 'Promotional Products', 'New Products', 'Best Sellers', 'Laptops','Monitors','Keyboards','Mouses','Hard Drives','Webcams'];
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       height: 50,
-//       child: SingleChildScrollView(
-//         scrollDirection: Axis.horizontal,
-//         child: Row(
-//           children: categories
-//               .map((category) => Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 6.0),
-//                     child: Chip(label: Text(category)),
-//                   ))
-//               .toList(),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class Categories extends StatelessWidget {
 
   final String text;
+  final String categoryId;
 
-  const Categories({super.key,required this.text});
+  const Categories({super.key,required this.text, required this.categoryId});
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +152,7 @@ class Categories extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-
+            Navigator.push(context, MaterialPageRoute(builder: (_) => ProductPageScreen(categoryId: categoryId)));
           },
           child: Text(
             "View All",
@@ -196,23 +166,3 @@ class Categories extends StatelessWidget {
     );
   }
 }
-
-// class ProductGrid extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return GridView.builder(
-//       shrinkWrap: true,
-//       physics: NeverScrollableScrollPhysics(),
-//       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 2,
-//         childAspectRatio: 0.7,
-//         mainAxisSpacing: 5.0,
-//         crossAxisSpacing: 5.0,
-//       ),
-//       itemCount: 4,
-//       itemBuilder: (context, index) {
-//         return ProductCard();
-//       },
-//     );
-//   }
-// }

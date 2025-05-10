@@ -2,6 +2,7 @@ import 'package:ecommerce_app/models/add_to_cart.dart';
 import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/models/checkout_order.dart';
 import 'package:ecommerce_app/models/delete_cart.dart';
+import 'package:ecommerce_app/models/order_coupon.dart';
 import 'package:ecommerce_app/models/order_detail.dart';
 import 'package:ecommerce_app/models/order_history.dart';
 import 'package:ecommerce_app/models/order_status.dart';
@@ -23,6 +24,10 @@ class OrderProvider with ChangeNotifier{
   List<OrderHistoryModel>? _historyOrders;
 
   List<OrderHistoryModel>? get historyOrders => _historyOrders;
+
+  List<OrderCouponModel>? _couponOrders;
+
+  List<OrderCouponModel>? get couponOrders => _couponOrders;
 
   List<OrderStatusModel>? _orderStatus;
 
@@ -49,6 +54,34 @@ class OrderProvider with ChangeNotifier{
       final orderResponse = await _orderRepository.getOrderHisotry(tokenId!);
       if(orderResponse.isNotEmpty) {
         _historyOrders = orderResponse.map<OrderHistoryModel>((item) => OrderHistoryModel.fromJson(item)).toList();
+      }
+
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+  }
+
+  Future<void> getAllCouponOrders(String couponId) async{
+  
+    _isLoading = true;
+    notifyListeners();
+
+    try { 
+      
+      final orderResponse = await _orderRepository.getOrderUsingCoupon(couponId);
+      
+      if(orderResponse.isNotEmpty) {
+        _couponOrders = orderResponse.map<OrderCouponModel>((item) => OrderCouponModel.fromJson(item)).toList();
+      }
+      else {
+        _couponOrders = [];
       }
 
       _errorMessage = "";

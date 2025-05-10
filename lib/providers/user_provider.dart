@@ -36,6 +36,7 @@ class UserProvider with ChangeNotifier {
       String? tokenId = prefs.getString('token');
 
       final response = await _userRepository.getUserById(tokenId!);
+      print("Response Data: $response");
 
       if(response != null) {
         _user = UserModel(
@@ -43,7 +44,8 @@ class UserProvider with ChangeNotifier {
           email: response["email"],
           fullName: response["fullName"],
           imageUrl: response["imageUrl"],
-          shippingAddress: ShippingAddress.fromJson(response["shippingAddress"])
+          shippingAddress: ShippingAddress.fromJson(response["shippingAddress"]),
+          isAdmin: response["isAdmin"]
         );
 
         _errorMessage = "";
@@ -123,8 +125,6 @@ class UserProvider with ChangeNotifier {
       final response = await _userRepository.changeUserPassword(user, id);
       if(response != "") {
 
-        // bool updated = false;
-
         _errorMessage = '';
         notifyListeners();
         return response;
@@ -151,6 +151,7 @@ class UserProvider with ChangeNotifier {
 
     try {
       final response = await _userRepository.getUserLogin(user);
+      print("Response Data: $response");
       if (response != "") {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -160,7 +161,8 @@ class UserProvider with ChangeNotifier {
           email: response["email"],
           fullName: response["fullName"],
           imageUrl: response["imageUrl"],
-          shippingAddress: ShippingAddress.fromJson(response["shippingAddress"])
+          shippingAddress: ShippingAddress.fromJson(response["shippingAddress"]),
+          isAdmin: response["isAdmin"]
         );
 
         _errorMessage = "";

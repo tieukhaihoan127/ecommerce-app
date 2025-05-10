@@ -2,7 +2,7 @@ class ProductCart {
 
   final String? title;
   final int? price;
-  final int? discountPercentage;
+  final double? discountPercentage;
   final String? thumbnail;
   final int? priceNew;
 
@@ -18,7 +18,7 @@ class ProductCart {
     return ProductCart(
       title: json['title'] ?? '',
       price: json['price'] ?? 0.0,
-      discountPercentage: json['discountPercentage'] ?? 0,
+      discountPercentage: (json['discountPercentage'] as num?)?.toDouble() ?? 0.0,
       thumbnail: json['thumbnail'] ?? '',
       priceNew: json['priceNew'] ?? 0
     );

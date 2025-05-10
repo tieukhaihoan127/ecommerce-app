@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 class SearchBarWithFilter extends StatelessWidget {
 
   final String categoryId;
-  final String categoryName;
   final Function(String)? onSearchChanged;
 
-  const SearchBarWithFilter({super.key, required this.categoryId, required this.categoryName, this.onSearchChanged});
+  const SearchBarWithFilter({super.key, required this.categoryId, this.onSearchChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class SearchBarWithFilter extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context, 
-                MaterialPageRoute(builder: (context) => FilterScreen(categoryId: categoryId, categoryName: categoryName,)),
+                MaterialPageRoute(builder: (context) => FilterScreen(categoryId: categoryId,)),
               );
             }, 
             icon: const Icon(Icons.tune)

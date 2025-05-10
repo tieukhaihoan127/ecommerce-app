@@ -20,10 +20,12 @@ class _CategorySelectorState extends State<CategorySelector> {
     });
   }
 
-  int _selectedIndex = 0;
-
   @override
 Widget build(BuildContext context) {
+
+  final categoryProvider = Provider.of<CategoryProvider>(context);
+  int selectedIndex = categoryProvider.selectedCategoryIndex;
+
   return Consumer<CategoryProvider>(
     builder: (context, categoryProvider, child) {
 
@@ -44,18 +46,16 @@ Widget build(BuildContext context) {
                   label: Text(
                     categoryProvider.categories[index].name,
                     style: TextStyle(
-                      color: _selectedIndex == index ? Colors.white : Colors.black,
+                      color: selectedIndex == index ? Colors.white : Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  selected: _selectedIndex == index,
+                  selected: selectedIndex == index,
                   selectedColor: Colors.blue,
                   onSelected: (bool selected) {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
-                    categoryProvider.getStatus(
-                        context, categoryProvider.categories[index]);
+                    categoryProvider.setSelectedCategoryIndex(index);
+                    categoryProvider.getStatus(context, categoryProvider.categories[index]);
+                    categoryProvider.getStatus(context, categoryProvider.categories[index]);
                   },
                 ),
               );

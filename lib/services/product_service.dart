@@ -66,6 +66,7 @@ class ProductService {
 
       Response response = await _dio.get(url);
       if (response.statusCode == 200 && response.data["products"].length > 0) {
+        print('Product Response:  ${List<Map<String, dynamic>>.from(response.data["products"])}');
         return List<Map<String, dynamic>>.from(response.data["products"]);
       }
       throw Exception('Failed to load products');

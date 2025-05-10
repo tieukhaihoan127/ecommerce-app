@@ -8,18 +8,18 @@ class UserModel {
   String? id;
   String? email;
   String? fullName;
-  String? password;
   ShippingAddress? shippingAddress;
   @JsonKey(includeIfNull: false)
   String? imageUrl;
+  bool? isAdmin;
 
   UserModel({
     this.id,
     required this.email,
     required this.fullName,
-    this.password,
     this.shippingAddress,
-    this.imageUrl
+    this.imageUrl,
+    this.isAdmin
   });
 
   Map<String, dynamic> toJson() {
@@ -27,7 +27,6 @@ class UserModel {
       if (id != null) "_id": id, 
       "email": email,
       "fullName": fullName,
-      "password": password,
       "imageUrl": imageUrl,
       "shippingAddress": shippingAddress?.toJson(),
     };
@@ -41,6 +40,7 @@ class UserModel {
       shippingAddress: json['shippingAddress'] != null
           ? ShippingAddress.fromJson(json['shippingAddress'])
           : null,
+      isAdmin: json['isAdmin']
     );
   }
 

@@ -15,6 +15,8 @@ class ProductProvider with ChangeNotifier{
 
   Map<String,List<ProductModel>> productsByCategory = {};
 
+  Map<String,List<ProductModel>> productsHomeByCategory = {};
+
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
@@ -34,7 +36,7 @@ class ProductProvider with ChangeNotifier{
 
         _products = (productss as List).map<ProductModel>((item) => ProductModel.fromJson(item)).toList();
 
-        productsByCategory[status] = products;
+        productsHomeByCategory[status] = products;
         
       }
 

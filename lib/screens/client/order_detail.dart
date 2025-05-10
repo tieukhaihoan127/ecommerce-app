@@ -233,7 +233,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
 
     if(coupon > 0) {
-      totalAmount = totalAmount - ((totalAmount * coupon)/100);
+      totalAmount = totalAmount - coupon;
     }
 
     return Container(
@@ -265,7 +265,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 if(loyaltyPoint > 0)
                   _buildInfoRow("Loyalty Point", loyaltyPoint),
                 if(coupon > 0)
-                  _buildInfoRowPercent("Coupon", coupon),
+                  _buildInfoRow("Coupon", coupon),
               ],
             ),
           ),

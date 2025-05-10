@@ -32,10 +32,10 @@ class CartModel {
       color: json['color'] ?? '',
       quantity: json['quantity'] ?? 0,
       carts: json['productInfo'] != null ? ProductCart.fromJson(json['productInfo']) : null,
-      totalPrice: json['totalPrice'] ?? 0.0,
+      totalPrice: json['totalPrice'] ?? 0,
       taxes: json['taxes'] ?? 0,
       shippingFee: json['shippingFee'] ?? 0,
-      loyaltyPoint: json['loyaltyPoint'] ?? 0.0,
+      loyaltyPoint: (json['loyaltyPoint'] as num?)?.toDouble() ?? 0.0,
     );
   }
 

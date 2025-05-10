@@ -51,7 +51,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final reviews = reviewProvider.review;
 
     return Scaffold(
-      appBar: AppBarProductHelper(categoryName: "Laptop",), 
+      appBar: AppBarProductHelper(), 
       body: SingleChildScrollView(
         child: Column(
           children: [

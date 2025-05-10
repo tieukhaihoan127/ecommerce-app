@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/providers/cart_provider.dart';
+import 'package:ecommerce_app/providers/coupon_provider.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:ecommerce_app/screens/client/category.dart';
@@ -36,6 +37,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
       if(index == 2) {
         final cartProvider = Provider.of<CartProvider>(context, listen: false);
+        final couponProvider = Provider.of<CouponProvider>(context, listen: false);
+        couponProvider.resetCode();
+        couponProvider.resetValue();
         cartProvider.clearCart();
         cartProvider.getAllCarts();
       }

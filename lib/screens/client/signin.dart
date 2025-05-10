@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/config/responsive.dart';
 import 'package:ecommerce_app/models/user_login.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
@@ -7,148 +8,138 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Signin extends StatefulWidget {
-
-  const Signin({ super.key });
+  const Signin({Key? key}) : super(key: key);
 
   @override
   State<Signin> createState() => _SigninState();
-  
 }
 
-class _SigninState extends State<Signin>{
-
+class _SigninState extends State<Signin> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
-  
   @override
   Widget build(BuildContext context) {
-
     final userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsetsDirectional.symmetric(
-            horizontal: 16,
-            vertical: 40
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _headerSignIn(context),
-              _labelSignIn(context),
-              const SizedBox(height: 20,),
-              _emailLabel(context),
-              const SizedBox(height: 20,),
-              _passwordLabel(context),
-              const SizedBox(height: 10,),
-              _forgetPassword(context),
-              const SizedBox(height: 25,),
-              _signUpButton(context, userProvider),
-              const SizedBox(height: 25,),
-              _redirectSignUp(context)
-            ],
+      body: Responsive(
+        mobile: _buildForm(context, userProvider, isDesktop: false),
+        desktop: Center(
+          child: SizedBox(
+            width: 500,
+            child: _buildForm(context, userProvider, isDesktop: true),
           ),
         ),
       ),
     );
   }
 
-  Widget _headerSignIn(BuildContext context) {
+  Widget _buildForm(BuildContext context, UserProvider userProvider, {required bool isDesktop}) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _headerSignIn(),
+          const SizedBox(height: 8),
+          _labelSignIn(),
+          const SizedBox(height: 24),
+          _emailLabel(),
+          const SizedBox(height: 24),
+          _passwordLabel(),
+          const SizedBox(height: 12),
+          _forgetPassword(context),
+          const SizedBox(height: 32),
+          _signInButton(userProvider),
+          const SizedBox(height: 24),
+          _redirectSignUp(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _headerSignIn() {
     return Text(
       "Welcome Back!",
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 30,
-        color: Colors.black
-      ),
+      style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _labelSignIn(BuildContext context) {
+  Widget _labelSignIn() {
     return Text(
       "Enter your details below",
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 14,
-        color: Colors.grey
-      ),
+      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
     );
   }
 
-  Widget _emailLabel(BuildContext context) {
+  Widget _emailLabel() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Email",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18
-          ),
-        ),
-        const SizedBox(height: 8,),
+        Text("Email", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
         TextField(
           controller: _emailController,
           decoration: InputDecoration(
             hintText: "Enter your email",
             prefixIcon: Icon(Icons.email),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5)
-            )
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget _passwordLabel(BuildContext context) {
+  Widget _passwordLabel() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Password",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18
-          ),
-        ),
-        const SizedBox(height: 8,),
+        Text("Password", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
         TextField(
           controller: _passwordController,
+          obscureText: _obscurePassword,
           decoration: InputDecoration(
             hintText: "Enter your password",
             prefixIcon: Icon(Icons.lock),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5)
-            )
+            suffixIcon: IconButton(
+              icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget  _signUpButton(BuildContext context, UserProvider userProvider) {
+  Widget _signInButton(UserProvider userProvider) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 48,
       child: ElevatedButton(
-        onPressed: userProvider.isLoading ? null : () => _loginUser(context, userProvider) ,
+        onPressed: userProvider.isLoading ? null : () => _loginUser(context, userProvider),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        ), 
-        child: userProvider.isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text("Sign In", style: TextStyle(color: Colors.white, fontSize: 16),)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: userProvider.isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : const Text("Sign In", style: TextStyle(fontSize: 16, color: Colors.white)),
+      ),
     );
   }
 
   Future<void> _loginUser(BuildContext context, UserProvider userProvider) async {
-
     final user = LoginUser(
-      email: _emailController.text,
-      password: _passwordController.text,
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
     );
 
     bool isLogin = await userProvider.loginUser(user);
@@ -158,10 +149,10 @@ class _SigninState extends State<Signin>{
         const SnackBar(content: Text("Đăng nhập thành công!")),
       );
       Navigator.pushAndRemoveUntil(
-        context, 
+        context,
         MaterialPageRoute(builder: (context) => BottomNavBar()),
-        (Route<dynamic> route) => false
-    ) ;
+        (Route<dynamic> route) => false,
+      );
     } else {
       _passwordController.clear();
       _emailController.clear();
@@ -169,23 +160,20 @@ class _SigninState extends State<Signin>{
         SnackBar(content: Text(userProvider.errorMessage)),
       );
     }
-
   }
 
   Widget _forgetPassword(BuildContext context) {
     return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PasswordRecoveryScreen()),
-            );
-          },
-          child: Text(
-            "Forget Passwod?",
-          style: TextStyle(
-          color: Colors.black,
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PasswordRecoveryScreen()),
+      ),
+      child: Text(
+        "Forgot Password?",
+        style: TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.bold
+          color: Colors.blue[700],
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -194,32 +182,16 @@ class _SigninState extends State<Signin>{
   Widget _redirectSignUp(BuildContext context) {
     return Row(
       children: [
-        Text(
-          "Don't have account yet?",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16
-          ),  
-        ),
-        const SizedBox(width: 5,),
+        const Text("Don't have an account?", style: TextStyle(fontSize: 16)),
+        const SizedBox(width: 5),
         GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Signup()),
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => Signup())),
           child: Text(
             "Sign up now!",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.blue[700], fontWeight: FontWeight.bold),
           ),
-        )
+        ),
       ],
     );
   }
-
 }

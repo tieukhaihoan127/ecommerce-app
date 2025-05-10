@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/providers/address_provider.dart';
+import 'package:ecommerce_app/providers/admin_provider.dart';
 import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/providers/category_provider.dart';
 import 'package:ecommerce_app/providers/chat_provider.dart';
@@ -31,6 +32,7 @@ import 'package:ecommerce_app/widgets/order_info_section.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -46,6 +48,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => ReviewProvider()),
       ChangeNotifierProvider(create: (context) => RatingProvider()),
       ChangeNotifierProvider(create: (context) => ChatProvider()),
+      ChangeNotifierProvider(create: (context) => AdminProvider()),
     ],
     child: MyApp(),
     )
@@ -70,10 +73,15 @@ class MyApp extends StatelessWidget {
     getSessionId();
     Provider.of<UserProvider>(context, listen: false).getUserById();
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ecommerce App',
       theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.light,
+        ),
+        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
       home: BottomNavBar()

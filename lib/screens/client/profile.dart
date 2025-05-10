@@ -72,7 +72,7 @@ class Profile extends StatelessWidget{
     final userProvider = Provider.of<UserProvider>(context);
     
     return Scaffold(
-      appBar: AppBarHelper(userId: userProvider.user?.id ?? "", title: "My Profile"),
+      appBar: AppBarHelper(title: "My Profile"),
       body: userProvider.user?.id == null ? NotLoggedInPage() : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsetsDirectional.symmetric(

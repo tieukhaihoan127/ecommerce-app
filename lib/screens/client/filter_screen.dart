@@ -6,9 +6,8 @@ class FilterScreen extends StatefulWidget {
 
   final String categoryId;
   
-  final String categoryName;
 
-  const FilterScreen({super.key, required this.categoryId, required this.categoryName});
+  const FilterScreen({super.key, required this.categoryId});
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -283,8 +282,7 @@ class _FilterScreenState extends State<FilterScreen> {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  print(selectedSortOption);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPageScreen(categoryId: widget.categoryId, categoryName: widget.categoryName, sortById: selectedSortOption, brandSelection: selectedBrands, priceRangeStart: priceRange.start, priceRangeEnd: priceRange.end, ratingRangeStart: ratingRange.start, ratingRangeEnd: ratingRange.end,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPageScreen(categoryId: widget.categoryId, sortById: selectedSortOption, brandSelection: selectedBrands, priceRangeStart: priceRange.start, priceRangeEnd: priceRange.end, ratingRangeStart: ratingRange.start, ratingRangeEnd: ratingRange.end,)));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black87,
