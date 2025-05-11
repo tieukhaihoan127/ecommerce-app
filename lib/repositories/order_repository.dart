@@ -14,4 +14,10 @@ class OrderRepository {
 
   Future<List<Map<String,dynamic>>> getOrderUsingCoupon(String couponId) => _orderService.getOrderUsingCoupon(couponId);
 
+  Future<dynamic> getAllAdminOrder(String status, DateTime startDate, DateTime endDate, int page) => _orderService.getAdminOrder(status, startDate, endDate, page);
+
+  Future<Map<String,dynamic>> getAdminOrderDetail(String orderId) => _orderService.getAdminOrderDetail(orderId);
+
+  Future<String> updateOrderStatus(String orderId, String status) => _orderService.updateOrderStatus(orderId, status);
+
 }

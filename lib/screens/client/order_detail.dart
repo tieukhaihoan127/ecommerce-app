@@ -126,6 +126,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             "Client Address",
             "${userInfo.address}, ${userInfo.ward}, ${userInfo.district}, ${userInfo.city}",
           ),
+          _buildClientInfoRow("Purchased Date", _formatTimestamp(provider.orderDetail!.createdDate!)),
         ],
       ),
     );
@@ -158,69 +159,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
-
-  Widget buildPromoCode() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
-      ),
-      child: DottedBorder(
-        borderType: BorderType.RRect,
-        radius: const Radius.circular(8),
-        color: Colors.grey,
-        dashPattern: [6, 4],
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: const Center(
-            child: Text(
-              "#A10PEM000542",
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoyaltyPointSection(int loyaltyPoints) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
-      boxShadow: [
-        BoxShadow(color: Colors.black12, blurRadius: 6),
-      ],
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          "Loyalty Points Used",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        Text(
-            "${_formatCurrency(loyaltyPoints)} đ",
-            style: TextStyle(
-            color:Colors.black,
-            fontSize: 14,
-          ),
-        ),
-      ],
-    ),
-  );
-}
 
   Widget buildOrderInfo(double subtotal, int taxes, int shippingFee, int loyaltyPoint, int coupon, OrderProvider orderProvider) {
     double totalAmount = subtotal + shippingFee + ((subtotal * taxes) / 100);
@@ -359,4 +297,9 @@ String _formatCurrency(int price) {
 String _formatCurrencyDouble(double price) {
   final NumberFormat formatter = NumberFormat("#,##0", "vi_VN");
   return formatter.format(price);
+}
+
+String _formatTimestamp(DateTime timestamp) {
+  final formatter = DateFormat('dd/MM/yyyy - HH:mm');
+  return formatter.format(timestamp);
 }

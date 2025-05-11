@@ -126,4 +126,75 @@ class OrderService {
     } 
   }
 
+  Future<dynamic> getAdminOrder(String status, DateTime startDate, DateTime endDate, int page) async{
+    try {
+
+      var url = "${ApiConfig.getOrderAdminUrl}/$status?page=$page&limit=20";
+
+      if(status == "Custom") {
+        url = "${ApiConfig.getOrderAdminUrl}/$status?startDate=${startDate.toIso8601String()}&endDate=${endDate.toIso8601String()}&page=$page&limit=20";
+      }
+      
+      Response response = await _dio.get(url);
+      if(response.statusCode == 200){
+        return response.data;
+      }
+      else {
+        return await Future.error("Lỗi hệ thống, không lấy được data!");
+      }
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
+    } 
+  }
+
+  Future<Map<String, dynamic>> getAdminOrderDetail(String orderId) async {
+    try {
+
+      var url = "${ApiConfig.getOrderAdminDetailUrl}$orderId";
+
+      Response response = await _dio.get(url);
+      if(response.statusCode == 200 && response.data["order"] != null){
+        return response.data["order"];
+      }
+      else {
+        return await Future.error("Lỗi hệ thống, không lấy được data!");
+      }
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}");
+
+      if (e.response != null && e.response?.data != null) {
+        final errorMessage = e.response?.data['error'] ?? 'Lấy thông tin đơn hàng thất bại!';
+        return Future.error(errorMessage);
+      }
+
+      return Future.error("Lỗi kết nối! Vui lòng thử lại.");
+    } 
+  }
+
+  Future<String> updateOrderStatus(String orderId, String status) async {
+    try {
+
+      var url = "${ApiConfig.updateOrderStatusUrl}$orderId/$status";
+
+      Response response = await _dio.patch(url);
+      if(response.statusCode == 200 && response.data["message"] != null){
+        return response.data["message"];
+      }
+      else {
+        return await Future.error("Lỗi hệ thống, không thêm được data!");
+      }
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}");
+
+      if (e.response != null && e.response?.data != null) {
+        final errorMessage = e.response?.data['error'] ?? 'Cập nhật đơn hàng thất bại!';
+        return Future.error(errorMessage);
+      }
+
+      return Future.error("Lỗi kết nối! Vui lòng thử lại.");
+    } 
+  }
+
 }

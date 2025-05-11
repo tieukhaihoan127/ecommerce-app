@@ -4,7 +4,7 @@ import 'package:ecommerce_app/models/user_order_detail.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
-class OrderDetailModel {
+class OrderDetailAdminModel {
   String? orderId;
   double? totalPrice;
   List<ProductOrderHistoryDetail>? products;
@@ -14,8 +14,9 @@ class OrderDetailModel {
   int? loyaltyPoint;
   int? coupon;
   DateTime? createdDate;
+  String? status;
 
-  OrderDetailModel({
+  OrderDetailAdminModel({
     this.orderId,
     this.totalPrice,
     this.products,
@@ -24,7 +25,8 @@ class OrderDetailModel {
     this.shippingFee,
     this.loyaltyPoint,
     this.coupon,
-    this.createdDate
+    this.createdDate,
+    this.status
   });
 
   @override
@@ -32,8 +34,8 @@ class OrderDetailModel {
     return 'OrderHistoryModel(orderId: $orderId, totalPrice: $totalPrice, products: $products, userInfo: $userInfo, taxes: $taxes, shippingFee: $shippingFee)';
   }
 
-  factory OrderDetailModel.fromJson(Map<String, dynamic> json) {
-    return OrderDetailModel(
+  factory OrderDetailAdminModel.fromJson(Map<String, dynamic> json) {
+    return OrderDetailAdminModel(
       orderId: json['orderId'] ?? '',
       totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
       products: (json['products'] as List?)?.map((item) => ProductOrderHistoryDetail.fromJson(item)).toList(),
@@ -43,6 +45,7 @@ class OrderDetailModel {
       loyaltyPoint: json['loyaltyPoint'] ?? 0,
       coupon: json['couponPoint'] ?? 0,
       createdDate: json['createdDate'] != null ? DateTime.parse(json['createdDate']) : null,
+      status: json['status'] ?? '',
     );
   }
 

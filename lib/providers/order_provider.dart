@@ -4,6 +4,7 @@ import 'package:ecommerce_app/models/checkout_order.dart';
 import 'package:ecommerce_app/models/delete_cart.dart';
 import 'package:ecommerce_app/models/order_coupon.dart';
 import 'package:ecommerce_app/models/order_detail.dart';
+import 'package:ecommerce_app/models/order_detail_admin.dart';
 import 'package:ecommerce_app/models/order_history.dart';
 import 'package:ecommerce_app/models/order_status.dart';
 import 'package:ecommerce_app/models/user_cart.dart';
@@ -21,6 +22,10 @@ class OrderProvider with ChangeNotifier{
 
   bool get isLoading => _isLoading;
 
+  int? _pages;
+
+  int? get pages => _pages;
+
   List<OrderHistoryModel>? _historyOrders;
 
   List<OrderHistoryModel>? get historyOrders => _historyOrders;
@@ -29,6 +34,10 @@ class OrderProvider with ChangeNotifier{
 
   List<OrderCouponModel>? get couponOrders => _couponOrders;
 
+  List<OrderCouponModel>? _adminOrders;
+
+  List<OrderCouponModel>? get adminOrders => _adminOrders;
+
   List<OrderStatusModel>? _orderStatus;
 
   List<OrderStatusModel>? get orderStatus => _orderStatus;
@@ -36,6 +45,10 @@ class OrderProvider with ChangeNotifier{
   OrderDetailModel? _orderDetail;
 
   OrderDetailModel? get orderDetail => _orderDetail;
+
+  OrderDetailAdminModel? _orderDetailAdmin;
+
+  OrderDetailAdminModel? get orderDetailAdmin => _orderDetailAdmin;
 
   String _errorMessage = "";
 
@@ -96,7 +109,56 @@ class OrderProvider with ChangeNotifier{
 
   }
 
-  Future<void> getOrderDetail(String orderId) async{
+  Future<void> getAllAdminOrders(String status, DateTime? startDate, DateTime? endDate, int page) async{
+  
+    _isLoading = true;
+    notifyListeners();
+
+    try { 
+
+      var filterStatus = "All";
+
+      if(status == "Today") {
+        filterStatus = "Today";
+      }
+      else if(status == "Yesterday") {
+        filterStatus = "Yesterday";
+      }
+      else if(status == "This Week") {
+        filterStatus = "Week";
+      }
+      else if(status == "This Month") {
+        filterStatus = "Month";
+      }
+      else if(status == "Custom Range") {
+        filterStatus = "Custom";
+      }
+      
+      final orderResponseData = await _orderRepository.getAllAdminOrder(filterStatus, startDate ?? DateTime.now(), endDate ?? DateTime.now(), page);
+
+      final orderResponse = orderResponseData["order"];
+      
+      if(orderResponse.isNotEmpty) {
+        _adminOrders = orderResponse.map<OrderCouponModel>((item) => OrderCouponModel.fromJson(item)).toList();
+        _pages = orderResponseData["totalPages"];
+      }
+      else {
+        _adminOrders = [];
+      }
+
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+  }
+
+  Future<void> getOrderDetail(String orderId) async {
   
     _isLoading = true;
     notifyListeners();
@@ -104,11 +166,36 @@ class OrderProvider with ChangeNotifier{
     try { 
       
       final orderResponse = await _orderRepository.getOrderDetail(orderId);
-      print("Response: $orderResponse");
+
       if(orderResponse.isNotEmpty) {
         _orderDetail = OrderDetailModel.fromJson(orderResponse);
+      }
 
-        print("Data response: $_orderDetail");
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+  }
+
+  Future<void> getAdminOrderDetail(String orderId) async {
+  
+    _isLoading = true;
+    notifyListeners();
+
+    try { 
+      
+      final orderResponse = await _orderRepository.getAdminOrderDetail(orderId);
+
+      _orderDetailAdmin = null;
+
+      if(orderResponse.isNotEmpty) {
+        _orderDetailAdmin = OrderDetailAdminModel.fromJson(orderResponse);
       }
 
       _errorMessage = "";
@@ -131,11 +218,9 @@ class OrderProvider with ChangeNotifier{
     try { 
       
       final orderResponse = await _orderRepository.getOrderStatus(orderId);
-      print("Response: $orderResponse");
+
       if(orderResponse.isNotEmpty) {
         _orderStatus = orderResponse.map<OrderStatusModel>((item) => OrderStatusModel.fromJson(item)).toList();
-
-        print("Data response: $_orderStatus");
       }
 
       _errorMessage = "";
@@ -180,6 +265,34 @@ class OrderProvider with ChangeNotifier{
     return "";
 
   } 
+
+  Future<String> updateOrderStatus(String orderId, String status) async {
+
+    try {
+
+      final orderRepsonse = await _orderRepository.updateOrderStatus(orderId, status);
+
+      if(orderRepsonse != "") {
+        _orderDetailAdmin!.status = status;
+        _errorMessage = "";
+        notifyListeners();
+        return orderRepsonse;
+      }
+      else {
+        _errorMessage = "Cập nhật đơn hàng thất bại!";
+        notifyListeners();
+      }
+
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      notifyListeners();
+    }
+
+    return "";
+
+  }
 
   void clearOrder() {
     _historyOrders = [];

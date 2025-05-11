@@ -5,6 +5,7 @@ import 'package:ecommerce_app/screens/admin/create_coupon.dart';
 import 'package:ecommerce_app/screens/admin/dashboard_screen.dart';
 import 'package:ecommerce_app/screens/admin/invoice_screen.dart';
 import 'package:ecommerce_app/screens/admin/order_coupon_screen.dart';
+import 'package:ecommerce_app/screens/admin/order_detail_admin.dart';
 import 'package:ecommerce_app/screens/admin/product_screen.dart';
 import 'package:ecommerce_app/core/config/responsive.dart';
 import 'package:ecommerce_app/screens/admin/revenue_screen.dart';
@@ -26,6 +27,8 @@ class MainScreen extends StatelessWidget {
         break;
       case AppPage.invoice:
         bodyContent = InvoiceScreen();
+      case AppPage.detailOrder:
+        bodyContent = OrderDetailAdminScreen(orderId: selectedCouponId ?? '',);
         break;
       case AppPage.coupon:
         bodyContent = CouponScreen();
