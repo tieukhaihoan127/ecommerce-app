@@ -30,7 +30,7 @@ class MainScreen extends StatelessWidget {
         bodyContent = UserManagementScreen();
         break;
       case AppPage.product:
-        bodyContent = ProductScreen();
+        bodyContent = ProductsScreen();
         break;
       case AppPage.dashboard:
       default:

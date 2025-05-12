@@ -13,8 +13,27 @@ class FileInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Xác định kích thước màn hình để điều chỉnh padding và font size
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+
+    // Điều chỉnh padding theo kích thước màn hình
+    final cardPadding = isMobile
+        ? EdgeInsets.all(defaultPadding / 2)
+        : isTablet
+        ? EdgeInsets.all(defaultPadding * 0.75)
+        : EdgeInsets.all(defaultPadding);
+
+    // Điều chỉnh font size theo kích thước màn hình
+    final titleFontSize = isMobile ? 16.0 : isTablet ? 18.0 : 20.0;
+    final valueFontSize = isMobile ? 20.0 : isTablet ? 22.0 : 25.0;
+
+    // Điều chỉnh kích thước icon
+    final iconSize = isMobile ? 40.0 : isTablet ? 45.0 : 50.0;
+
     return Container(
-      padding: EdgeInsets.all(defaultPadding),
+      padding: cardPadding,
       decoration: BoxDecoration(
         color: secondaryColor,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -23,46 +42,43 @@ class FileInfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Icon
           Center(
             child: Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-              ),
+              height: iconSize,
+              width: iconSize,
               child: SvgPicture.asset(
                 info.svgSrc!,
+                fit: BoxFit.contain, // Đảm bảo SVG vừa vặn trong container
               ),
             ),
           ),
+          SizedBox(height: isMobile ? 8 : 12), // Thêm khoảng cách
+          // Giá trị
           Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                info.total!,
-                style: TextStyle(
-                    color: primaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            child: Text(
+              info.total!,
+              style: TextStyle(
+                color: primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: valueFontSize,
               ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
+          SizedBox(height: isMobile ? 4 : 8), // Thêm khoảng cách
+          // Tiêu đề
           Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                info.title!,
-                style: TextStyle(
-                    color: Colors.white,
-
-                    fontSize: 20
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            child: Text(
+              info.title!,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: titleFontSize,
               ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2, // Cho phép 2 dòng để tránh tràn
             ),
           ),
         ],
