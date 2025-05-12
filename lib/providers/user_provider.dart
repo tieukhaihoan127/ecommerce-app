@@ -4,6 +4,7 @@ import 'package:ecommerce_app/models/remember_user_token.dart';
 import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
+import 'package:ecommerce_app/models/user_admin_model.dart';
 import 'package:ecommerce_app/models/user_login.dart';
 import 'package:ecommerce_app/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,14 @@ class UserProvider with ChangeNotifier {
   String _token = "";
 
   String get token => _token;
+
+  List<UserAdminModel>? _userAdmin;
+
+  List<UserAdminModel>? get userAdmin => _userAdmin;
+
+  UserAdminModel? _userAdminDetail;
+
+  UserAdminModel? get userAdminDetail => _userAdminDetail;
 
   Future<void> getUserById() async {
     
@@ -276,6 +285,80 @@ class UserProvider with ChangeNotifier {
     }
 
     return "Cập nhật mật khẩu không thành công!";
+  }
+
+  Future<void> loadUserAdmin() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try { 
+      final users = await _userRepository.getAllUsersAdmin();
+      if(users.isNotEmpty) {
+        _userAdmin = (users as List).map<UserAdminModel>((item) => UserAdminModel.fromJson(item)).toList();
+      }
+
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadUserAdminDetail(String userId) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try { 
+      final user = await _userRepository.getUserAdminDetail(userId);
+      
+      _userAdminDetail = UserAdminModel.fromJson(user);
+
+      _errorMessage = "";
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<String> updateUserAdminInfo(String id, String email, String fullName, String city, String district, String ward, String address, String status) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+
+      var shippingAddress = ShippingAddress(city: city, district: district, ward: ward, address: address);
+
+      var user = UserAdminModel(email: email, fullName: fullName, shippingAddress: shippingAddress,status: status); 
+
+      final response = await _userRepository.updateUserAdmin(user, id);
+      if(response != "") {
+        _errorMessage = '';
+        loadUserAdmin();
+        notifyListeners();
+        return response;
+      } else {
+        _errorMessage = "Cập nhật thông tin người dùng thất bại!";
+        notifyListeners();
+      }
+
+    }
+    catch(e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    return "";
   }
 
   Future<void> resetUser() async {

@@ -79,8 +79,6 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
             });
 
             addressProvider.fetchDistrict(province.code).then((_) {
-              print(_selectedDistrictName);
-              print(addressProvider.districts[0].name);
               final district = addressProvider.districts.firstWhereOrNull(
                 (d) => d.name == _selectedDistrictName,
               );

@@ -67,6 +67,7 @@ class _OrderDetailAdminScreenState extends State<OrderDetailAdminScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

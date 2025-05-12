@@ -5,6 +5,7 @@ import 'package:ecommerce_app/models/otp_verify.dart';
 import 'package:ecommerce_app/models/remember_user_token.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
+import 'package:ecommerce_app/models/user_admin_model.dart';
 import 'package:ecommerce_app/models/user_login.dart';
 
 class UserService {
@@ -233,6 +234,56 @@ class UserService {
       }
 
       return Future.error("Lỗi kết nối! Vui lòng thử lại.");
+    }
+  }
+
+  Future<List<Map<String,dynamic>>> getUserAdmin() async{
+    try {
+      Response response = await _dio.get(ApiConfig.getUserAdminUrl);
+      if (response.statusCode == 200 && response.data["user"].length > 0) {
+        return List<Map<String, dynamic>>.from(response.data["user"]);
+      }
+      throw Exception('Failed to load user');
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
+    } 
+  }
+
+  Future<Map<String,dynamic>> getUserAdminDetail(String userId) async{
+    try {
+      var url = "${ApiConfig.getUserAdminUrl}$userId";
+      Response response = await _dio.get(url);
+      if (response.statusCode == 200) {
+        return Map<String, dynamic>.from(response.data["users"]);
+      }
+      throw Exception('Failed to load user detail');
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
+    } 
+  }
+
+  Future<String> updateUserAdmin(UserAdminModel user, String id) async {
+    try {
+      final url = "${ApiConfig.updateUserAdminUrl}$id";
+      Response response = await _dio.patch(
+        url, 
+        data: user.toJson(),
+        options: Options(headers: {'Content-Type': 'application/json'}) 
+      );
+
+      if (response.data != null) {
+        return response.data["message"];
+      } else {
+        return await Future.error("Lỗi hệ thống, không nhận được data!");
+      }
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
     }
   }
 

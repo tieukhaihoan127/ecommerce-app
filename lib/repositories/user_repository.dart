@@ -3,6 +3,7 @@ import 'package:ecommerce_app/models/otp_verify.dart';
 import 'package:ecommerce_app/models/remember_user_token.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
+import 'package:ecommerce_app/models/user_admin_model.dart';
 import 'package:ecommerce_app/models/user_login.dart';
 import 'package:ecommerce_app/services/user_service.dart';
 
@@ -25,5 +26,11 @@ class UserRepository {
   Future<dynamic> submitOTP(OTPVerify info) => _userService.submitUserOTP(info);
 
   Future<String> updatePassword(RememberUserToken info) => _userService.userPasswordRecovery(info);
+
+  Future<List<Map<String,dynamic>>> getAllUsersAdmin() => _userService.getUserAdmin();
+
+  Future<Map<String,dynamic>> getUserAdminDetail(String userId) => _userService.getUserAdminDetail(userId);
+
+  Future<String> updateUserAdmin(UserAdminModel user, String id) => _userService.updateUserAdmin(user, id);
 
 }

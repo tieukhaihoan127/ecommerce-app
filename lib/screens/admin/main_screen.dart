@@ -10,6 +10,7 @@ import 'package:ecommerce_app/screens/admin/product_screen.dart';
 import 'package:ecommerce_app/core/config/responsive.dart';
 import 'package:ecommerce_app/screens/admin/revenue_screen.dart';
 import 'package:ecommerce_app/screens/admin/side_menu.dart';
+import 'package:ecommerce_app/screens/admin/user_detail_admin.dart';
 import 'package:ecommerce_app/screens/admin/user_management_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class MainScreen extends StatelessWidget {
         break;
       case AppPage.invoice:
         bodyContent = InvoiceScreen();
+        break;
       case AppPage.detailOrder:
         bodyContent = OrderDetailAdminScreen(orderId: selectedCouponId ?? '',);
         break;
@@ -35,6 +37,8 @@ class MainScreen extends StatelessWidget {
         break;
       case AppPage.user:
         bodyContent = UserManagementScreen();
+        case AppPage.detailUser:
+        bodyContent = UserDetailScreen(userId: selectedCouponId ?? '',);
         break;
       case AppPage.product:
         bodyContent = ProductScreen();

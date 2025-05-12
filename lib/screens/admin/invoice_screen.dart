@@ -160,24 +160,6 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
                                       ),
                                   ],
                                 ),
-
-                                // Add Coupon Button
-                                ElevatedButton.icon(
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: defaultPadding * 1.5,
-                                      vertical: defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    context.read<AdminProvider>().changePage(AppPage.createCoupon!);
-                                    if (Responsive.isMobile(context)) {
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  icon: Icon(Icons.add, color: Colors.white),
-                                  label: Text("Thêm coupon", style: TextStyle(color: Colors.white)),
-                                ),
                               ],
                             ),
                             SizedBox(

@@ -10,7 +10,8 @@ enum AppPage {
   coupon,
   couponOrder,
   createCoupon,
-  detailOrder
+  detailOrder,
+  detailUser
 }
 
 class AdminProvider with ChangeNotifier {
