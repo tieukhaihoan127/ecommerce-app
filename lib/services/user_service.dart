@@ -37,8 +37,6 @@ class UserService {
         options: Options(headers: {'Content-Type': 'application/json'}) 
       );
 
-      print("Server Response: ${response.data}");
-
       if (response.data != null) {
         return response.data;
       } else {

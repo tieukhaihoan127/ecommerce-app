@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/api_config.dart';
-import 'package:ecommerce_app/models/add_to_cart.dart';
 import 'package:ecommerce_app/models/checkout_order.dart';
 
 class OrderService {

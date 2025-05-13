@@ -4,6 +4,7 @@ import 'package:ecommerce_app/providers/cart_provider.dart';
 import 'package:ecommerce_app/providers/category_provider.dart';
 import 'package:ecommerce_app/providers/chat_provider.dart';
 import 'package:ecommerce_app/providers/coupon_provider.dart';
+import 'package:ecommerce_app/providers/dashboard_provider.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/providers/product_provider.dart';
 import 'package:ecommerce_app/providers/rating_provider.dart';
@@ -49,6 +50,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => RatingProvider()),
       ChangeNotifierProvider(create: (context) => ChatProvider()),
       ChangeNotifierProvider(create: (context) => AdminProvider()),
+      ChangeNotifierProvider(create: (context) => DashboardProvider()),
     ],
     child: MyApp(),
     )
