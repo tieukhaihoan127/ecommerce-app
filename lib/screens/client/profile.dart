@@ -114,17 +114,6 @@ class Profile extends StatelessWidget{
 
   }
 
-  Widget _headerProfile(BuildContext context) {
-    return Text(
-      "My Profile",
-      style: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-        fontSize: 18
-      ),
-    );
-  }
-
   Widget _profileInfo(BuildContext context, String? image, String? name, String? email) {
     return Column(
       children: [

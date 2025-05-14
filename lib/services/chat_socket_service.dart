@@ -25,10 +25,11 @@ class ChatSocketService {
     });
   }
 
-  void sendMessage(String userId, String content, List<String> images) {
+  void sendMessage(String userId, String userConnectedId,String content, List<String> images) {
     if (_socket != null && _isConnected) {
       _socket!.emit("CLIENT_SEND_MESSAGE", {
         "userId": userId,
+        "userConnectedId": userConnectedId,
         "content": content,
         "images": images,
       });

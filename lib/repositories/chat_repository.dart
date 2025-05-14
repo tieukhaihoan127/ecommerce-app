@@ -6,4 +6,6 @@ class ChatRepository {
 
   Future<List<Map<String,dynamic>>> getAllMessages(String userId) => _chatService.fetchMessages(userId);
 
+  Future<List<Map<String,dynamic>>> getAllUserMessages() => _chatService.fetchUsers();
+
 }

@@ -131,12 +131,13 @@ class _CartItemCardState extends State<CartItemCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: 
                           [
-                            if(widget.productCart.carts!.discountPercentage! <= 0)
+                            if(widget.productCart.carts!.discountPercentage! <= 0) ...[
                               Text(
                                 "${_formatCurrency(currentPriceNew * currentQty)} đ",
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               )
-                            else
+                            ]
+                            else ...[
                               Text(
                                 "${_formatCurrency(currentPrice)} đ",
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -145,6 +146,8 @@ class _CartItemCardState extends State<CartItemCard> {
                                 "${_formatCurrency(currentPriceNew * currentQty)} đ",
                                 style: TextStyle(fontSize: 14, color: Colors.grey, decoration: TextDecoration.lineThrough),
                               ),
+                            ]
+                              
                           ],
                         ),
                         _counterControl(cartProvider, currentQty)

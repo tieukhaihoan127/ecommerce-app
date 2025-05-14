@@ -10,26 +10,9 @@ import 'package:ecommerce_app/providers/product_provider.dart';
 import 'package:ecommerce_app/providers/rating_provider.dart';
 import 'package:ecommerce_app/providers/review_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
+import 'package:ecommerce_app/screens/admin/admin_chat.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
-import 'package:ecommerce_app/screens/client/cart.dart';
-import 'package:ecommerce_app/screens/client/category.dart';
-import 'package:ecommerce_app/screens/client/change_user_information.dart';
-import 'package:ecommerce_app/screens/client/coupon_page.dart';
-import 'package:ecommerce_app/screens/client/home.dart';
-import 'package:ecommerce_app/screens/client/not_logged_in.dart';
-import 'package:ecommerce_app/screens/client/order_history.dart';
-import 'package:ecommerce_app/screens/client/order_tracking.dart';
-import 'package:ecommerce_app/screens/client/payment_method.dart';
-import 'package:ecommerce_app/screens/client/product_detail_page.dart';
-import 'package:ecommerce_app/screens/client/profile.dart';
-import 'package:ecommerce_app/screens/client/signin.dart';
-import 'package:ecommerce_app/screens/client/signup.dart';
-import 'package:ecommerce_app/screens/client/submit_otp.dart';
-import 'package:ecommerce_app/screens/client/test.dart';
-import 'package:ecommerce_app/widgets/carousel.dart';
-import 'package:ecommerce_app/widgets/cart_item_card.dart';
-import 'package:ecommerce_app/widgets/coupon_card.dart';
-import 'package:ecommerce_app/widgets/order_info_section.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,7 +69,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home: BottomNavBar()
+      home: AdminChatPage()
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:ecommerce_app/helpers/image_upload.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -70,8 +69,10 @@ class _ChatPageState extends State<ChatPage> {
       "infoUser": userProvider.user?.fullName,
     };
 
+    print("Image Url Array: $imageUrls");
+
     chatProvider.addLocalMessage(newMessage);
-    chatProvider.sendMessage(widget.userId, content, imageUrls ?? []);
+    chatProvider.sendMessage(widget.userId, "", content, imageUrls ?? []);
     _controller.clear();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();
@@ -111,7 +112,7 @@ class _ChatPageState extends State<ChatPage> {
             return const Center(child: CircularProgressIndicator());
           }
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            _scrollToBottom();
+            Future.delayed(Duration(milliseconds: 100), _scrollToBottom);
           });
           return Column(
             children: [

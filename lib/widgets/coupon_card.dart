@@ -1,9 +1,7 @@
 import 'package:ecommerce_app/providers/coupon_provider.dart';
-import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CouponCard extends StatelessWidget {
 
@@ -88,8 +86,6 @@ class CouponCard extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () async {
-
-                            final prefs = await SharedPreferences.getInstance();
 
                             if(discount > totalAmount) {
                               ScaffoldMessenger.of(context).showSnackBar(

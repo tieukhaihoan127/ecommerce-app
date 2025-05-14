@@ -59,7 +59,11 @@ class CartProvider with ChangeNotifier{
         tokenId: tokenId
       );
 
+      print("User: $user");
+
       final cartResponse = await _cartRepository.getAllCarts(user);
+
+      print("Cart Provider Response: $cartResponse");
 
       if(cartResponse['products'] == null || (cartResponse['products'] as List).isEmpty) {
         _carts = [];

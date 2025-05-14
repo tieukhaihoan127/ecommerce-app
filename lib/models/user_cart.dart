@@ -7,6 +7,11 @@ class UserCartModel {
     this.tokenId
   });
 
+  @override
+  String toString() {
+    return 'UserCartModel(sessionId: $sessionId,tokenId: $tokenId)';
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "sessionId": sessionId,

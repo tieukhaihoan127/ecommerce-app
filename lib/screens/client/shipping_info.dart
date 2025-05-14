@@ -1,7 +1,5 @@
 import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/models/checkout_order.dart';
-import 'package:ecommerce_app/models/shipping_address.dart';
-import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/providers/address_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/payment_method.dart';
@@ -109,7 +107,6 @@ class _ShippingInfoScreenState extends State<ShippingInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
     final addressProvider = Provider.of<AddressProvider>(context);
 
     return Scaffold(

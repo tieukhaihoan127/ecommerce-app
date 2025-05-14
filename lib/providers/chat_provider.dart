@@ -7,7 +7,12 @@ class ChatProvider with ChangeNotifier {
   final ChatSocketService _socketService = ChatSocketService();
 
   List<Map<String, dynamic>> _messages = [];
+
   List<Map<String, dynamic>> get messages => _messages;
+
+  List<Map<String, dynamic>> _chatUsers = [];
+
+  List<Map<String, dynamic>> get chatUsers => _chatUsers;
 
   bool _isLoading = false;
 
@@ -17,8 +22,8 @@ class ChatProvider with ChangeNotifier {
     _socketService.connect(userId);
   }
 
-  void sendMessage(String token, String content, List<String> images) {
-    _socketService.sendMessage(token, content, images);
+  void sendMessage(String token, String userConnectedId, String content, List<String> images) {
+    _socketService.sendMessage(token, userConnectedId, content, images);
   }
 
   void disconnectSocket() {
@@ -28,6 +33,13 @@ class ChatProvider with ChangeNotifier {
   Future<void> loadMessages(String token) async {
     _isLoading = true;
     _messages = await _repository.getAllMessages(token);
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchChatUsers() async {
+    _isLoading = true;
+    _chatUsers = await _repository.getAllUserMessages();
     _isLoading = false;
     notifyListeners();
   }

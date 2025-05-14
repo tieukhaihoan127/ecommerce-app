@@ -70,17 +70,36 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.pinkAccent.shade100,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          '${productVariant?.discountPercentage ?? widget.productModel.discountPercentage}% OFF',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                      if(productVariant != null) ...[
+                        if(productVariant!.discountPercentage! > 0) ...[
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.pinkAccent.shade100,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              '${productVariant?.discountPercentage}% OFF',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ]
+                      ]
+                      else ...[
+                        if(widget.productModel.discountPercentage! > 0) ...[
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.pinkAccent.shade100,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              '${widget.productModel.discountPercentage}% OFF',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ]
+                      ]
                     ],
                   ),
                   SizedBox(height: 10),
@@ -105,7 +124,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             setState(() {
                               productVariant = item;
                               quantity = 1;
-                              print("Product Variant: $productVariant");
                             });
                           }
                         );
@@ -115,18 +133,50 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   SizedBox(height: 15),
                   Row(
                     children: [
-                      Text(
-                        "${_formatCurrency(productVariant != null ? ((productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100)) : ((widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100)))} đ",
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        "${_formatCurrency(productVariant != null ? (productVariant!.price!) : (widget.productModel.price!))} đ",
-                        style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey,
-                        ),
-                      ),
+                      if(productVariant != null) ...[
+                        if(productVariant!.discountPercentage! > 0) ...[
+                          Text(
+                          "${_formatCurrency(productVariant!.price! - (productVariant!.price!*productVariant!.discountPercentage!)/100)} đ",
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "${_formatCurrency(productVariant!.price!)} đ",
+                            style: TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ]
+                        else ...[
+                          Text(
+                          "${_formatCurrency(productVariant!.price!)} đ",
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ]
+                      ]
+                      else ...[
+                        if(widget.productModel.discountPercentage! > 0) ...[
+                          Text(
+                          "${_formatCurrency(widget.productModel.price! - (widget.productModel.price!*widget.productModel.discountPercentage!)/100)} đ",
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "${_formatCurrency(widget.productModel.price!)} đ",
+                            style: TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ]
+                        else ...[
+                          Text(
+                          "${_formatCurrency(widget.productModel.price!)} đ",
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ]
+                      ],
                       Spacer(),
                       Row(
                         children: [
