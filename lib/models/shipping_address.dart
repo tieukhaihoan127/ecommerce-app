@@ -1,9 +1,9 @@
 class ShippingAddress {
   
-  final String city;
-  final String district;
-  final String ward;
-  final String address;
+  String? city;
+  String? district;
+  String? ward;
+  String? address;
 
   ShippingAddress({
     required this.city,

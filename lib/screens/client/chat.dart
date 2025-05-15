@@ -31,20 +31,19 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _setupChat() async {
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
     await chatProvider.loadMessages(widget.userId);
+    chatProvider.connectSocket(widget.userId);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();
     });
-    chatProvider.connectSocket(widget.userId);
   }
 
   void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      }
+    });
   }
 
   @override
@@ -69,14 +68,10 @@ class _ChatPageState extends State<ChatPage> {
       "infoUser": userProvider.user?.fullName,
     };
 
-    print("Image Url Array: $imageUrls");
-
     chatProvider.addLocalMessage(newMessage);
     chatProvider.sendMessage(widget.userId, "", content, imageUrls ?? []);
     _controller.clear();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToBottom();
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
   }
 
   Future<void> _pickAndSendImages() async {
@@ -111,9 +106,11 @@ class _ChatPageState extends State<ChatPage> {
           if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
+
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Future.delayed(Duration(milliseconds: 100), _scrollToBottom);
+            _scrollToBottom();
           });
+
           return Column(
             children: [
               Expanded(
@@ -155,26 +152,23 @@ class _ChatPageState extends State<ChatPage> {
                                       fontWeight: FontWeight.w600),
                                 ),
                                 const SizedBox(height: 4),
-                                if ((msg["images"] as List?)
-                                        ?.isNotEmpty ??
-                                    false) ...
-                                  (msg["images"] as List).map<Widget>((imgUrl) {
-                                    return Padding(
+                                if ((msg["images"] as List?)?.isNotEmpty ??
+                                    false) ...[
+                                  for (var imgUrl in msg["images"])
+                                    Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 8.0),
                                       child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(8),
                                         child: Image.network(
                                           imgUrl,
                                           height: 150,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
-                                    );
-                                  }).toList(),
-                                if ((msg["content"] as String?)
-                                        ?.isNotEmpty ??
+                                    ),
+                                ],
+                                if ((msg["content"] as String?)?.isNotEmpty ??
                                     false)
                                   Container(
                                     padding: const EdgeInsets.all(12),
@@ -187,9 +181,10 @@ class _ChatPageState extends State<ChatPage> {
                                     child: Text(
                                       msg["content"] ?? "",
                                       style: TextStyle(
-                                          color: isMe
-                                              ? Colors.white
-                                              : Colors.black),
+                                        color: isMe
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                     ),
                                   ),
                               ],
@@ -214,8 +209,7 @@ class _ChatPageState extends State<ChatPage> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.image),
-                      onPressed:
-                          _isSendingImages ? null : _pickAndSendImages,
+                      onPressed: _isSendingImages ? null : _pickAndSendImages,
                     ),
                     Expanded(
                       child: TextField(

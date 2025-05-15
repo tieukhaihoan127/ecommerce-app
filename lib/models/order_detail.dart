@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/models/product_order_history.dart';
 import 'package:ecommerce_app/models/product_order_history_detail.dart';
 import 'package:ecommerce_app/models/user_order_detail.dart';
 import 'package:json_annotation/json_annotation.dart';

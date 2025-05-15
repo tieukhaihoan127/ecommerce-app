@@ -40,28 +40,10 @@ class SideMenu extends StatelessWidget {
               },
             ),
             DrawerListTile(
-              title: "Doanh thu",
-              svgSrc: "assets/icons/menu_tran.svg",
-              press: () {
-                context.read<AdminProvider>().changePage(AppPage.revenue);
-                if (Responsive.isMobile(context))
-                  Navigator.pop(context); // Đóng drawer
-              },
-            ),
-            DrawerListTile(
               title: "Hóa đơn",
               svgSrc: "assets/icons/menu_doc.svg",
               press: () {
                 context.read<AdminProvider>().changePage(AppPage.invoice);
-                if (Responsive.isMobile(context))
-                  Navigator.pop(context); // Đóng drawer
-              },
-            ),
-            DrawerListTile(
-              title: "Quản lý sản phẩm",
-              svgSrc: "assets/icons/menu_store.svg",
-              press: () {
-                context.read<AdminProvider>().changePage(AppPage.product);
                 if (Responsive.isMobile(context))
                   Navigator.pop(context); // Đóng drawer
               },
@@ -82,6 +64,13 @@ class SideMenu extends StatelessWidget {
                 context.read<AdminProvider>().changePage(AppPage.coupon);
                 if (Responsive.isMobile(context))
                   Navigator.pop(context); // Đóng drawer
+              },
+            ),
+            DrawerListTile(
+              title: "Thoát giao diện",
+              svgSrc: "assets/icons/drop_box.svg",
+              press: () {
+                Navigator.pop(context);
               },
             ),
           ],

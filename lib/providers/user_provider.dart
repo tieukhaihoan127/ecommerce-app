@@ -126,6 +126,36 @@ class UserProvider with ChangeNotifier {
     }
   }
 
+  Future<void> updateAddress(String city, String district, String ward, String shipping, String id) async {
+
+    try {
+
+      var address = ShippingAddress(city: city, district: district, ward: ward, address: shipping);
+
+      final response = await _userRepository.updateAddress(address, id);
+      if(response != "") {
+
+        _user?.shippingAddress?.city = city;
+        _user?.shippingAddress?.district = district;
+        _user?.shippingAddress?.ward = ward;
+        _user?.shippingAddress?.address = shipping;
+
+        _errorMessage = '';
+        notifyListeners();
+      } else {
+        _errorMessage = "Cập nhật thông tin thất bại!";
+        notifyListeners();
+      }
+
+    }
+    catch(e) {
+      _errorMessage = e.toString();
+    }
+    finally {
+      notifyListeners();
+    }
+  }
+
   Future<String> changeUserPassword(ChangePasswordInfo user, String id) async {
     _isLoading = true;
     notifyListeners();

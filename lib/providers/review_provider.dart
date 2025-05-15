@@ -1,7 +1,5 @@
 import 'package:ecommerce_app/models/add_review.dart';
-import 'package:ecommerce_app/models/coupon.dart';
 import 'package:ecommerce_app/models/review.dart';
-import 'package:ecommerce_app/repositories/coupon_repository.dart';
 import 'package:ecommerce_app/repositories/review_repository.dart';
 import 'package:flutter/material.dart';
 

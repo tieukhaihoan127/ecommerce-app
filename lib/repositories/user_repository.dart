@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/models/change_password.dart';
 import 'package:ecommerce_app/models/otp_verify.dart';
 import 'package:ecommerce_app/models/remember_user_token.dart';
+import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/models/user_admin_model.dart';
@@ -16,6 +17,8 @@ class UserRepository {
   Future<void> addUser(UserModel user) => _userService.createUser(user);
 
   Future<dynamic> updateUser(UpdateUserInfo user, String id) => _userService.updateUser(user, id);
+
+  Future<dynamic> updateAddress(ShippingAddress address, String id) => _userService.updateAddress(address, id);
 
   Future<dynamic> getUserLogin(LoginUser user) => _userService.loginUser(user);
 

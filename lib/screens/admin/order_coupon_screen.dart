@@ -4,7 +4,6 @@ import 'package:ecommerce_app/models/order_coupon.dart';
 import 'package:ecommerce_app/providers/admin_provider.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/screens/admin/header.dart';
-import 'package:ecommerce_app/screens/admin/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -99,7 +98,6 @@ class _OrderCouponScreenState extends State<OrderCouponScreen> {
                                   DataColumn(label: Text("Tổng tiền")),
                                   DataColumn(label: Text("Trạng thái")),
                                   DataColumn(label: Text("Ngày tạo đơn")),
-                                  DataColumn(label: Text("Hành động")),
                                 ],
                                 rows: List.generate(
                                   orderProvider.couponOrders?.length ?? 0,
@@ -133,24 +131,6 @@ DataRow recentFileDataRow(OrderCouponModel orderInfo) {
       DataCell(Text("${_formatCurrencyDouble(orderInfo.totalAmount!)} VND")),
       DataCell(Text(orderInfo.latestStatus.toString())),
       DataCell(Text(_formatTimestamp(orderInfo.latestUpdatedAt!))),
-      DataCell(
-        ElevatedButton(
-          onPressed: () {
-
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          ),
-          child: Text(
-            'Xem sản phẩm',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
     ],
   );
 }

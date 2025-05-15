@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/models/product_cart.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()

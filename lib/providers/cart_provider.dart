@@ -3,7 +3,6 @@ import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/models/delete_cart.dart';
 import 'package:ecommerce_app/models/user_cart.dart';
 import 'package:ecommerce_app/repositories/cart_repository.dart';
-import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -63,17 +62,13 @@ class CartProvider with ChangeNotifier{
 
       final cartResponse = await _cartRepository.getAllCarts(user);
 
-      print("Cart Provider Response: $cartResponse");
-
       if(cartResponse['products'] == null || (cartResponse['products'] as List).isEmpty) {
         _carts = [];
         _totalPrice = 0;
-        print("Cart Response: $cartResponse");
       }
       else {
         final productsJson = cartResponse['products'] as List;
         _carts = productsJson.map<CartModel>((item) => CartModel.fromJson(item)).toList();
-        print("Cart Response Data: $_carts");
         _totalPrice = cartResponse['totalPrice'];
         _taxes = cartResponse['taxes'];
         _shippingFee = cartResponse['shippingFee'];

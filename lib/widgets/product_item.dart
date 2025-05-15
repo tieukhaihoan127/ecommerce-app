@@ -75,13 +75,26 @@ class ProductItem extends StatelessWidget{
                                 "${_formatCurrency(product.price! * (1 - product.discountPercentage! / 100))} đ",
                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                              Text(
-                                "${_formatCurrency(product.price!)} đ",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${_formatCurrency(product.price!)} đ",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    "-${product.discountPercentage!.toStringAsFixed(0)}%",
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           )

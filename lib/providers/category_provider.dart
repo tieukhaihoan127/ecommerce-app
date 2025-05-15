@@ -1,9 +1,8 @@
 import 'package:ecommerce_app/models/category.dart';
 import 'package:ecommerce_app/models/category_model_page.dart';
-import 'package:ecommerce_app/providers/product_provider.dart';
 import 'package:ecommerce_app/repositories/category_repositoroy.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 
 class CategoryProvider with ChangeNotifier{
 

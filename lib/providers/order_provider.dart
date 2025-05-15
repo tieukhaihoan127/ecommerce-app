@@ -1,16 +1,10 @@
-import 'package:ecommerce_app/models/add_to_cart.dart';
-import 'package:ecommerce_app/models/cart.dart';
 import 'package:ecommerce_app/models/checkout_order.dart';
-import 'package:ecommerce_app/models/delete_cart.dart';
 import 'package:ecommerce_app/models/order_coupon.dart';
 import 'package:ecommerce_app/models/order_detail.dart';
 import 'package:ecommerce_app/models/order_detail_admin.dart';
 import 'package:ecommerce_app/models/order_history.dart';
 import 'package:ecommerce_app/models/order_status.dart';
-import 'package:ecommerce_app/models/user_cart.dart';
-import 'package:ecommerce_app/repositories/cart_repository.dart';
 import 'package:ecommerce_app/repositories/order_repository.dart';
-import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -3,6 +3,7 @@ import 'package:ecommerce_app/core/config/api_config.dart';
 import 'package:ecommerce_app/models/change_password.dart';
 import 'package:ecommerce_app/models/otp_verify.dart';
 import 'package:ecommerce_app/models/remember_user_token.dart';
+import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:ecommerce_app/models/update_user_info.dart';
 import 'package:ecommerce_app/models/user.dart';
 import 'package:ecommerce_app/models/user_admin_model.dart';
@@ -34,6 +35,27 @@ class UserService {
       Response response = await _dio.patch(
         url, 
         data: user.toJson(),
+        options: Options(headers: {'Content-Type': 'application/json'}) 
+      );
+
+      if (response.data != null) {
+        return response.data;
+      } else {
+        return await Future.error("Lỗi hệ thống, không nhận được data!");
+      }
+
+    } on DioException catch (e) {
+      print("Dio Error: ${e.response?.data}"); 
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateAddress(ShippingAddress address, String id) async {
+    try {
+      final url = "${ApiConfig.updateAddressUrl}$id";
+      Response response = await _dio.patch(
+        url, 
+        data: {"shippingAddress": address.toJson()},
         options: Options(headers: {'Content-Type': 'application/json'}) 
       );
 

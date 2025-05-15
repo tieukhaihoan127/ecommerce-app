@@ -39,7 +39,15 @@ class _AdminChatPageState extends State<AdminChatPage> {
     final users = chatProvider.chatUsers;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Admin Chat")),
+      appBar: AppBar(
+        title: const Text("Admin Chat"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Row(
         children: [
           SizedBox(

@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/models/shipping_address.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()

@@ -1,6 +1,6 @@
 class ApiConfig {
 
-  static const String baseUrl = 'http://192.168.1.99:3030/';
+  static const String baseUrl = 'https://backend-ecommerce-f1lf.onrender.com/';
   static const String getUserUrl = '${baseUrl}users/signin';
   static const String registerUrl = '${baseUrl}users/register';
   static const String addressUrl = 'https://vn-public-apis.fpo.vn/';
@@ -9,6 +9,7 @@ class ApiConfig {
   static const String wardUrl = '${addressUrl}wards/getByDistrict?districtCode=';
   static const String loginUrl = '${baseUrl}users/login';
   static const String updateUserUrl = '${baseUrl}users/info/';
+  static const String updateAddressUrl = '${baseUrl}users/address/';
   static const String changePasswordUrl = '${baseUrl}users/change-password/';
   static const String getOTPUrl = '${baseUrl}users/password/forgot';
   static const String submitOTPUrl = '${baseUrl}users/password/otp';

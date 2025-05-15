@@ -1,16 +1,10 @@
 import 'package:ecommerce_app/core/theme/constant.dart';
-import 'package:ecommerce_app/models/coupon_admin.dart';
-import 'package:ecommerce_app/models/order_coupon.dart';
 import 'package:ecommerce_app/models/user_admin_model.dart';
 import 'package:ecommerce_app/providers/admin_provider.dart';
-import 'package:ecommerce_app/providers/coupon_provider.dart';
-import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/admin/header.dart';
 import 'package:ecommerce_app/core/config/responsive.dart';
-import 'package:ecommerce_app/screens/admin/order_coupon_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class UserManagementScreen extends StatefulWidget{
@@ -145,7 +139,7 @@ DataRow recentFileDataRow(UserAdminModel userInfo, BuildContext context) {
               height: 30,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.transparent, // hoặc secondaryColor nếu muốn đồng bộ nền
+                color: Colors.transparent, 
               ),
               child: ClipOval(
                 child: Image.network(

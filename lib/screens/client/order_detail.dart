@@ -1,4 +1,3 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/screens/client/order_tracking.dart';
 import 'package:ecommerce_app/widgets/order_item_card.dart';
@@ -74,15 +73,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ))
                     .toList(),
                 const SizedBox(height: 16),
-
-                // buildSectionTitle('Promo Code'),
-                // const SizedBox(height: 8),
-                // buildPromoCode(),
-                // const SizedBox(height: 16),
-
-                // _buildLoyaltyPointSection(loyalty),
-                // const SizedBox(height: 16,),
-
                 buildOrderInfo(
                   orderProvider.orderDetail?.totalPrice ?? 0,
                   orderProvider.orderDetail?.taxes ?? 0,

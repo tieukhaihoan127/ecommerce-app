@@ -2,8 +2,8 @@ import 'package:ecommerce_app/providers/user_provider.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
 import 'package:ecommerce_app/screens/client/change_password.dart';
 import 'package:ecommerce_app/screens/client/change_user_information.dart';
+import 'package:ecommerce_app/screens/client/manage_delivery_address.dart';
 import 'package:ecommerce_app/screens/client/not_logged_in.dart';
-import 'package:ecommerce_app/screens/client/signin.dart';
 import 'package:ecommerce_app/widgets/app_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -92,10 +92,7 @@ class Profile extends StatelessWidget{
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MyAccountScreen()));
                     }),
                     _itemProfile(Icons.location_on, context,"Manage Delivery Address", () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
-                    }),
-                    _itemProfile(Icons.history, context,"Order History", () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Signin()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MangaDeliveryAddressScreen()));
                     }),
                     _itemProfile(Icons.lock, context,"Change Password", () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => ChangePasswordScreen()));

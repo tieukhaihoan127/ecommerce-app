@@ -39,67 +39,6 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
     PaymentMethod('Google Pay', 'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1745417776/public/fqtdd4hddxmz7a7ctfu2.jpg'),
   ];
 
-  // Widget _showOrderDialog(BuildContext context) {
-  //     return Dialog(
-  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(20.0),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             Container(
-  //               padding: EdgeInsets.all(12),
-  //               decoration: BoxDecoration(
-  //                 color: Colors.black,
-  //                 shape: BoxShape.circle,
-  //               ),
-  //               child: Icon(Icons.check, color: Colors.white, size: 32),
-  //             ),
-  //             const SizedBox(height: 20),
-  //             Text(
-  //               "Congratulations !!",
-  //               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-  //             ),
-  //             const SizedBox(height: 10),
-  //             Text(
-  //               "Your order is accepted. Your items are on the way and should arrive shortly.",
-  //               textAlign: TextAlign.center,
-  //               style: TextStyle(color: Colors.grey[700]),
-  //             ),
-  //             const SizedBox(height: 24),
-  //             ElevatedButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context, 'tracking');
-  //               },
-  //               style: ElevatedButton.styleFrom(
-  //                 minimumSize: Size(double.infinity, 48),
-  //                 backgroundColor: Colors.black,
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(10),
-  //                 ),
-  //               ),
-  //               child: Text("Tracking Order", style: TextStyle(color: Colors.white),),
-  //             ),
-  //             const SizedBox(height: 12),
-  //             OutlinedButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context, 'shopping');
-  //               },
-  //               style: OutlinedButton.styleFrom(
-  //                 minimumSize: Size(double.infinity, 48),
-  //                 side: BorderSide(color: Colors.black),
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(10),
-  //                 ),
-  //               ),
-  //               child: Text("Continue Shopping", style: TextStyle(color: Colors.black)),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  // }
-
   Widget _showOrderDialog(BuildContext context) {
   final order = widget.order;
   return Dialog(
@@ -204,21 +143,6 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
               ),
             ),
             const SizedBox(height: 24),
-
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context, 'tracking');
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 48),
-                backgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text("Tracking Order", style: TextStyle(color: Colors.white),),
-            ),
-            const SizedBox(height: 12),
             OutlinedButton(
               onPressed: () {
                 Navigator.pop(context, 'shopping');
@@ -284,10 +208,11 @@ class _PaymentSelectionScreenState extends State<PaymentSelectionScreen> {
                 );
                 
                 if(orderProvider.isLoading == false) {
-                  if (result == 'tracking') {
-                    Navigator.pushNamed(context, '/tracking'); 
-                  } else if (result == 'shopping') {
-                    Navigator.pushNamed(context, '/home'); 
+                  if(result == 'shopping') {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => BottomNavBar(initialIndex: 1)),
+                    );
                   }
                   else {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar()));

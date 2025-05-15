@@ -92,28 +92,11 @@ class _CartItemCardState extends State<CartItemCard> {
                           alignment: Alignment.centerRight,
                           child: IconButton(
                             onPressed: _removeItem,
-                            // () async {
-                            //   String? color = widget.productCart.color;
-                            //   String? productId = widget.productCart.productId;
-                            //   String message = await cartProvider.deleteProductFromCart(productId!, color!);
-                            //   await cartProvider.getAllCarts();
-                            //   if(cartProvider.errorMessage.isEmpty) {
-                            //     ScaffoldMessenger.of(context).showSnackBar(
-                            //       SnackBar(content: Text(message)),
-                            //     );
-                            //   }
-                            //   else {
-                            //     ScaffoldMessenger.of(context).showSnackBar(
-                            //       SnackBar(content: Text(cartProvider.errorMessage)),
-                            //     );
-                            //   }
-                            // },
                             icon: const Icon(Icons.delete, color: Colors.grey),
                           ),
                         )
                       ],
                     ),
-                    // const SizedBox(height: 4),
                     Row(
                       children: [
                         Text("Qty: ${currentQty ?? 0}", style: TextStyle(color: Colors.grey)),

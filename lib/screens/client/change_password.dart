@@ -13,27 +13,28 @@ class ChangePasswordScreen extends StatefulWidget {
 
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
-
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmedPasswordController = TextEditingController();
   bool _isUploading = false;
   String _id = "";
 
+  // Thêm biến để kiểm soát ẩn/hiện mật khẩu
+  bool _obscureCurrentPassword = true;
+  bool _obscureNewPassword = true;
+  bool _obscureConfirmPassword = true;
+
   @override
   void initState() {
     super.initState();
     final userProvider = Provider.of<UserProvider>(context, listen: false); 
-    
-    if(userProvider.user?.id != null) {
+    if (userProvider.user?.id != null) {
       _id = userProvider.user?.id ?? "";
     }
-
   }
 
   Future<void> _submitChangePassword() async {
-
     final user = Provider.of<UserProvider>(context, listen: false);
 
     setState(() {
@@ -41,30 +42,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
     });
 
     final changePasswordData = ChangePasswordInfo(
-        currentPassword: _currentPasswordController.text,
-        newPassword: _newPasswordController.text,
-        confirmPassword: _confirmedPasswordController.text
+      currentPassword: _currentPasswordController.text,
+      newPassword: _newPasswordController.text,
+      confirmPassword: _confirmedPasswordController.text,
     );
 
     String message = await user.changeUserPassword(changePasswordData, _id);
 
-    if(user.errorMessage.isEmpty) {
+    if (user.errorMessage.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
-
       setState(() {
         _isUploading = false;
       });
-    }
-    else {
+      Navigator.pop(context);
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(user.errorMessage)),
       );
     }
-
-    Navigator.pop(context);
-
   }
 
   @override
@@ -78,9 +75,39 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildTextField(Icons.lock, "Current Password", _currentPasswordController),
-            _buildTextField(Icons.lock, "New Password", _newPasswordController),
-            _buildTextField(Icons.lock, "Confirm Password", _confirmedPasswordController),
+            _buildPasswordField(
+              icon: Icons.lock,
+              label: "Current Password",
+              controller: _currentPasswordController,
+              obscureText: _obscureCurrentPassword,
+              toggleObscure: () {
+                setState(() {
+                  _obscureCurrentPassword = !_obscureCurrentPassword;
+                });
+              },
+            ),
+            _buildPasswordField(
+              icon: Icons.lock,
+              label: "New Password",
+              controller: _newPasswordController,
+              obscureText: _obscureNewPassword,
+              toggleObscure: () {
+                setState(() {
+                  _obscureNewPassword = !_obscureNewPassword;
+                });
+              },
+            ),
+            _buildPasswordField(
+              icon: Icons.lock,
+              label: "Confirm Password",
+              controller: _confirmedPasswordController,
+              obscureText: _obscureConfirmPassword,
+              toggleObscure: () {
+                setState(() {
+                  _obscureConfirmPassword = !_obscureConfirmPassword;
+                });
+              },
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isUploading ? null : _submitChangePassword,
@@ -89,7 +116,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
               ),
-              child: _isUploading ? CircularProgressIndicator(color: Colors.white) : Text("Change Password", style: TextStyle(color: Colors.white, fontSize: 16)),
+              child: _isUploading
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text("Change Password", style: TextStyle(color: Colors.white, fontSize: 16)),
             ),
           ],
         ),
@@ -97,19 +126,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
     );
   }
 
-  Widget _buildTextField(IconData icon, String label, TextEditingController controller) {
+  // Custom password text field with toggle visibility
+  Widget _buildPasswordField({
+    required IconData icon,
+    required String label,
+    required TextEditingController controller,
+    required bool obscureText,
+    required VoidCallback toggleObscure,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         controller: controller,
+        obscureText: obscureText,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.blue),
+          suffixIcon: IconButton(
+            icon: Icon(
+              obscureText ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
+            onPressed: toggleObscure,
+          ),
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
     );
   }
-
 }
+
 

@@ -4,38 +4,42 @@ import 'package:ecommerce_app/providers/order_provider.dart';
 import 'package:ecommerce_app/screens/client/cart.dart';
 import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/home.dart';
-import 'package:ecommerce_app/screens/client/order.dart';
 import 'package:ecommerce_app/screens/client/order_history.dart';
 import 'package:ecommerce_app/screens/client/profile.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart' show Provider;
+import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatefulWidget {
+  final int initialIndex;
 
-  const BottomNavBar({super.key});
+  const BottomNavBar({super.key, this.initialIndex = 0});
 
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
-
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+  late int _selectedScreenIndex;
 
-  int _selectedScreenIndex = 0;
-
-  final List<Widget>  _screens = [
+  final List<Widget> _screens = [
     HomeScreen(),
     CategoryScreen(),
     CartScreen(),
     OrderHistoryPageScreen(),
-    Profile()
+    Profile(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedScreenIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedScreenIndex = index;
 
-      if(index == 2) {
+      if (index == 2) {
         final cartProvider = Provider.of<CartProvider>(context, listen: false);
         final couponProvider = Provider.of<CouponProvider>(context, listen: false);
         couponProvider.resetCode();
@@ -44,18 +48,16 @@ class _BottomNavBarState extends State<BottomNavBar> {
         cartProvider.getAllCarts();
       }
 
-      if(index == 3) {
+      if (index == 3) {
         final orderProvider = Provider.of<OrderProvider>(context, listen: false);
         orderProvider.clearOrder();
         orderProvider.getAllHistoryOrders();
       }
-
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: _screens[_selectedScreenIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -64,7 +66,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.category), label: "Category"),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Cart"),
@@ -73,8 +75,5 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ],
       ),
     );
-
   }
-
-
 }

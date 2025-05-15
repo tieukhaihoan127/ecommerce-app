@@ -10,9 +10,7 @@ import 'package:ecommerce_app/providers/product_provider.dart';
 import 'package:ecommerce_app/providers/rating_provider.dart';
 import 'package:ecommerce_app/providers/review_provider.dart';
 import 'package:ecommerce_app/providers/user_provider.dart';
-import 'package:ecommerce_app/screens/admin/admin_chat.dart';
 import 'package:ecommerce_app/screens/client/bottom_nav.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,7 +67,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       debugShowCheckedModeBanner: false,
-      home: AdminChatPage()
+      home: BottomNavBar()
     );
   }
 }
