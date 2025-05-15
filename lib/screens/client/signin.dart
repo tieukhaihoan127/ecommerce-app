@@ -145,6 +145,7 @@ class _SigninState extends State<Signin> {
     bool isLogin = await userProvider.loginUser(user);
 
     if (isLogin) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Đăng nhập thành công!")),
       );

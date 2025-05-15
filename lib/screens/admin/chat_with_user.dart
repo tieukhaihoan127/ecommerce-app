@@ -8,9 +8,9 @@ import 'package:ecommerce_app/providers/chat_provider.dart';
 import 'package:ecommerce_app/helpers/image_upload.dart';
 
 class ChatWithUserView extends StatefulWidget {
-  final String userId;
-  final String userName;
-  final String userAvatar;
+  final String? userId;
+  final String? userName;
+  final String? userAvatar;
 
   const ChatWithUserView({
     super.key,
@@ -49,8 +49,8 @@ class _ChatWithUserViewState extends State<ChatWithUserView> {
     _previousUserId = widget.userId;
 
     final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-    await chatProvider.loadMessages(widget.userId);
-    chatProvider.connectSocket(widget.userId);
+    await chatProvider.loadMessages(widget.userId!);
+    chatProvider.connectSocket(widget.userId!);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();
@@ -88,7 +88,7 @@ class _ChatWithUserViewState extends State<ChatWithUserView> {
     };
 
     chatProvider.addLocalMessage(newMessage);
-    chatProvider.sendMessage(userProvider.user!.id!, widget.userId, content, imageUrls ?? []);
+    chatProvider.sendMessage(userProvider.user!.id!, widget.userId!, content, imageUrls ?? []);
     _controller.clear();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToBottom();

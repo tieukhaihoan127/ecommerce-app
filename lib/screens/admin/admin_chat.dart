@@ -63,7 +63,7 @@ class _AdminChatPageState extends State<AdminChatPage> {
                   ),
                   title: Text(user['fullName']),
                   onTap: () {
-                    _selectUser(user['_id'], user['fullName'], user['imageUrl']);
+                    _selectUser(user['_id'], user['fullName'], user['imageUrl'] ?? 'https://cdn-icons-png.flaticon.com/512/6596/6596121.png');
                   },
                   selected: user['_id'] == selectedUserId,
                 );
@@ -77,7 +77,7 @@ class _AdminChatPageState extends State<AdminChatPage> {
                 : ChatWithUserView(
                     userId: selectedUserId!,
                     userName: selectedUserName ?? "",
-                    userAvatar: selectedUserAvatar ?? "",
+                    userAvatar: selectedUserAvatar ?? "https://cdn-icons-png.flaticon.com/512/6596/6596121.png",
                   ),
           )
         ],
