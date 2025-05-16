@@ -25,10 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoaded = false;
 
   final List<String> imagePaths = [
-    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1695385905/samples/balloons.jpg",
-    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1695385910/samples/cup-on-a-table.jpg",
-    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1695385910/samples/chair-and-coffee-table.jpg",
-    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1695385905/samples/shoe.jpg"
+    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1747407473/m7urNdoR9p_1_ncye7h.png",
+    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1747407474/xFnoYWvpVr_flczar.png",
+    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1747407476/0ig4QkXL2p_pawttd.png",
+    "https://res.cloudinary.com/dwdhkwu0r/image/upload/v1747407480/cPnnUWYUC9_y5jeq8.png"
   ];
 
 @override
@@ -100,8 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SearchBarWidget(),
-              SizedBox(height: 20),
               Carousel(imagePaths: imagePaths),
               SizedBox(height: 20),
               CategorySelector(),

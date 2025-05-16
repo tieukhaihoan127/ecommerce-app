@@ -54,12 +54,12 @@ class _AppBarHomeState extends State<AppBarHome> {
             ),
           ] else ...[
             SizedBox(
-              width: 40,
+              width: 100,
               height: 40,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1745476257/public/jgp12jpbwqtio5lie00k.jpg',
+                  'https://res.cloudinary.com/dwdhkwu0r/image/upload/v1747374500/public/mz23blln8lktkkb3hex8.jpg',
                   fit: BoxFit.cover,
                 ),
               ),

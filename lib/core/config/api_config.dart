@@ -1,6 +1,7 @@
 class ApiConfig {
 
   static const String baseUrl = 'https://backend-ecommerce-f1lf.onrender.com/';
+  // static const String baseUrl = 'http://localhost:3030/';
   static const String getUserUrl = '${baseUrl}users/signin';
   static const String registerUrl = '${baseUrl}users/register';
   static const String addressUrl = 'https://vn-public-apis.fpo.vn/';

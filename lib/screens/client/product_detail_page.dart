@@ -254,17 +254,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ),
                           child: Text.rich(
                             TextSpan(
-                              text:
-                                  '${widget.productModel.description}',
-                              children: [
-                                TextSpan(
-                                  text: "...Read More",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
+                              text: '${widget.productModel.description}',
                             ),
                             style: TextStyle(color: Colors.black87, height: 1.4),
                           ),

@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/screens/client/category.dart';
 import 'package:ecommerce_app/screens/client/product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -27,18 +28,25 @@ class _FilterScreenState extends State<FilterScreen> {
     'Price Ascending',
     'Price Descending',
     'Best Discount',
-    'Newest',
+    'Best Seller',
   ];
 
   final List<String> brands = [
-    'ASUS',
-    'HP',
-    'MSI',
-    'Apple',
     'Acer',
-    'Lenovo',
+    'Akko',
+    'Apple',
+    'Asus',
+    'Corsair',
+    'Dell',
     'Gigabyte',
-    'LG Gram'
+    'HP',
+    'Intel',
+    'LG',
+    'Logitech',
+    'Mik',
+    'Razer',
+    'Samsung',
+    'Xigmatek',
   ];
 
   RangeValues priceRange = const RangeValues(0, 100000000);
